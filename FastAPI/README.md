@@ -1,0 +1,1 @@
+## Practicing fastAPI from the [AmigosCode](https://www.youtube.com/watch?v=GN6ICac3OXY).
