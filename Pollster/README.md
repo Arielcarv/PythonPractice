@@ -25,4 +25,18 @@ python manage.py migrate
 ```bash
 python manage.py startapp <NameOfTheApp>
 ```
+### Shell commands to query database:
+- On this example we are going to access the Question and Choice Object from database. First you need to access project shell.
+```bash
+python manage.py shell
+```
+- Then interact with objects.
+```python
+>> from polls.models import Choice, Question
+>> Question.Objects.all() # Show all Questions objects.
+>> Question.Objects.get(pk=<number>) # pk=Primary key.
+>> Question._meta.get_fields() # Show all Question fields with details.
+>> Choice.Objects.all() # Show all Choice objects.
+```
+
 
