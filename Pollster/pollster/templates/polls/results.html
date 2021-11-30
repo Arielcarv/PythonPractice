@@ -5,9 +5,9 @@
 
 <ul class="list-group mb-5">
     {% for choice in question.choice.all %}
-    <li class="list-group-item">
+    <li class="list-group-item justify-content-between align-items-center d-flex">
         {{ choice.choice_text }}
-        <span class="badge badge-success float-right">
+        <span class="badge bg-success float-right">
             {{ choice.votes }} vote{{ choice.votes | pluralize }}
         </span>
     </li>
