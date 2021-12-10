@@ -1,4 +1,4 @@
-# Django Crash Course from [Traversy Media](https://youtu.be/e1IyzVyrLSU)
+# Django tutorial for begginers [Programming with Mosh](https://youtu.be/rHux0gMZ3Eg)
 
 Link for the [Official Django tutorial](https://docs.djangoproject.com/en/3.2/intro/tutorial01/)
 
@@ -6,9 +6,9 @@ Link for the [Official Django tutorial](https://docs.djangoproject.com/en/3.2/in
 - Install `pip install pipenv`. And create a virtual environment.
 
 ```bash
-pipenv shell
-pipenv install django  # Inside the virtual environment.
-django-admin startproject pollster
+pipenv install django   # Inside the virtual environment.
+pipenv shell            # To activate the environment.
+django-admin startproject front
 ```
 
 - Run server:
