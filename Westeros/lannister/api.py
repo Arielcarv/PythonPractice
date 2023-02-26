@@ -8,6 +8,6 @@ def home(request):
     return "A lannister always pays their debts"
 
 
-@router.get("/rock")
-def rock(request, height:int):
+@router.get("/rock/{int:height}")
+def rock(request, height: int):
     return f"Casterly Rock is {height + 1}m tall"

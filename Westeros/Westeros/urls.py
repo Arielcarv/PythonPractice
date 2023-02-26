@@ -19,9 +19,11 @@ from django.urls import path
 from ninja import NinjaAPI
 
 from lannister.api import router as lannister_router
+from targaryen.api import router as targaryen_router
 
 api = NinjaAPI()
 api.add_router("lannister/", lannister_router)
+api.add_router("targaryen/", targaryen_router)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
