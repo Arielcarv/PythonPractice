@@ -17,6 +17,12 @@ def dragons(request):
     return data
 
 
+@router.get("/person/", response=list[PersonOut])
+def list_person(request):
+    queryset = Person.objects.all()
+    return queryset
+
+
 @router.get("/person/{int:person_id}", response=PersonOut)
 def person(request, person_id: int):
     return get_object_or_404(Person, id=person_id)
