@@ -8,10 +8,18 @@ class DragonOut(Schema):
 
 
 class PersonOut(ModelSchema):
+    full_name: str
+
     class Config:
         model = Person
-        model_fields = ["id", "birth_year", ]
+        model_fields = ["id", "birth_year", "name", "title"]
 
     @staticmethod
     def resolve_full_name(object):
         return f"{object.name} {object.title}"
+
+
+class PersonIn(Schema):
+    name: str
+    title: str
+    birth_year: int
