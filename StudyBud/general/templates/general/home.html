@@ -6,14 +6,15 @@
     <title>Home</title>
   </head>
   <body>
-    <h1>Home Heading</h1>
-    {% for room in rooms %}
-      <div>
-        <span>@{{ room.host }}</span>
-        <a href="{% url 'room' room.id %}">{{ room.id }} -- {{ room.name }}</a>
-        <p>{{ room.description }}</p>
-        <small>{{ room.topic.name }} - {{ room.created }}</small>
-      </div>
-    {% endfor %}
+  <h1>Home Heading</h1>
+  <a href="{% url 'create-room' %}"></a>
+  {% for room in rooms %}
+    <div>
+      <span>@{{ room.host }}</span>
+      <a href="{% url 'room' room.id %}">{{ room.id }} -- {{ room.name }}</a>
+      <p>{{ room.description }}</p>
+      <small>{{ room.topic.name }} - {{ room.created }}</small>
+    </div>
+  {% endfor %}
   </body>
 {% endblock content %}
