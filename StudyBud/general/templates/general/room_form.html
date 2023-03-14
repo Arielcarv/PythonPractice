@@ -1,16 +1,17 @@
 {% extends 'main.html' %}
+
 {% block content %}
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  </head>
+  <body>
   <div>
     <form method="POST" action="">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" name="name" value="Submit">
+      <input type="submit" value="Submit">
     </form>
   </div>
-</body>
+  </body>
 {% endblock %}

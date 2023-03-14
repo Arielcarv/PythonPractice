@@ -7,14 +7,20 @@
   </head>
   <body>
   <h1>Home Heading</h1>
-  <a href="{% url 'create-room' %}"></a>
+
+  <a href="{% url 'create-room' %}">CREATE ROOM</a>
+
   {% for room in rooms %}
     <div>
+      <hr>
+      <a href="{% url 'update-room' room.id %}">UPDATE ROOM</a>
+      <a href="{% url 'delete-room' room.id %}">DELETE ROOM</a>
       <span>@{{ room.host }}</span>
       <a href="{% url 'room' room.id %}">{{ room.id }} -- {{ room.name }}</a>
       <p>{{ room.description }}</p>
       <small>{{ room.topic.name }} - {{ room.created }}</small>
     </div>
   {% endfor %}
+
   </body>
 {% endblock content %}
