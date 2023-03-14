@@ -29,6 +29,7 @@ class CreateRoom(FormView):
     success_url = "/"
 
     def form_valid(self, form):
+        form.instance.host = self.request.user
         form.save()
         return super().form_valid(form)
 
