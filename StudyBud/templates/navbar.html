@@ -3,5 +3,13 @@
   <title>Title</title>
 </head>
 <body>
-  <h1>That's a navbar</h1>
+  <a href="/">
+    <h1>IMAGE LOGO</h1>
+  </a>
+  <form method="GET" action="{% url 'home' %}">
+    <label>
+      <input type="text" name="query" placeholder="Search" />
+    </label>
+  </form>
+  <a href="{% url 'login'%} ">Login</a>
 </body>

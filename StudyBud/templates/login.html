@@ -1,0 +1,30 @@
+{% extends 'main.html' %}
+{% block content %}
+  <head>
+    <meta charset="UTF-8">
+    <title>Sign-In</title>
+  </head>
+  <body>
+  <div>
+    <form method="POST" action="">
+      {% csrf_token %}
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <label> Username:
+        <input type="text" name="username" placeholder="Enter Username" required>
+      </label>
+      <label> Password:
+        <input type="password" name="password" placeholder="Enter Password" required>
+      </label>
+      <input type="submit" value="Login">
+    </form>
+  </div>
+
+
+  </body>
+{% endblock %}

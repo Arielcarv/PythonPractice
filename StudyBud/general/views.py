@@ -1,17 +1,52 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, UpdateView, DeleteView
 
+from general import forms
 from general.forms import RoomForm
-from general.models import Room
+from general.models import Room, Topic
+
+
+class LoginPage(View):
+    template_name = "login.html"
+    context = {}
+
+    def get(self, request):
+        return render(request, "login.html", self.context)
+
+    @staticmethod
+    def post(request):
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        try:
+            user.objects.get(username=username)
+            login(request, user)
+            return redirect("home")
+        except AttributeError:
+            messages.error(
+                request, "Invalid username or password."
+            )
+            return redirect("login")
 
 
 class Home(View):
     @staticmethod
     def get(request):
-        rooms = Room.objects.all()
-        context = {"rooms": rooms}
+        url_params = (
+            request.GET.get("query") if request.GET.get("query") else ""
+        )
+        rooms = Room.objects.filter(
+            Q(topic__name__iregex=url_params)
+            | Q(name__iregex=url_params)
+            | Q(description__iregex=url_params)
+        )
+        topics = Topic.objects.all()
+        room_count = rooms.count()
+        context = {"rooms": rooms, "room_count": room_count, "topics": topics}
         return render(request, "general/home.html", context)
 
 
