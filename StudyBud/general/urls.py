@@ -1,6 +1,14 @@
 from django.urls import path
 
-from .views import Home, RoomView, CreateRoom, UpdateRoom, DeleteRoom, LoginPage, LogoutPage
+from .views import (
+    Home,
+    RoomView,
+    CreateRoom,
+    UpdateRoom,
+    DeleteRoom,
+    LoginPage,
+    LogoutPage,
+)
 
 urlpatterns = [
     path("login", LoginPage.as_view(), name="login"),

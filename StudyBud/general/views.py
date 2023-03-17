@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
@@ -74,15 +76,30 @@ class CreateRoom(CustomLoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class UpdateRoom(CustomLoginRequiredMixin, UpdateView):
+class UpdateRoom(UserPassesTestMixin, UpdateView):
     model = Room
     template_name = "general/room_form.html"
     form_class = RoomForm
     success_url = "/"
 
+    def test_func(self):
+        print("Inside test_func")
+        if self.request.user == self.get_object().host:
+            return True
+        print(self.get_object().host)
+        PermissionDenied("You are not the host of this room.")
+
     def form_valid(self, form):
-        form.save()
         return super().form_valid(form)
+
+    # TODO: Fix this dispatch method calmly, and put error treatment in the template
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except PermissionDenied:
+            error_message = "You don't have permission to access this page."
+            # return render(request, "general/home.html", {"error_message": error_message}, status=200)
+            return redirect("home")
 
 
 class DeleteRoom(CustomLoginRequiredMixin, DeleteView):
