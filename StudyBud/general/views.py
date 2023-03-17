@@ -1,11 +1,11 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView, UpdateView, DeleteView
 
-from general import forms
+from common.util import CustomLoginRequiredMixin
 from general.forms import RoomForm
 from general.models import Room, Topic
 
@@ -23,14 +23,19 @@ class LoginPage(View):
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
         try:
-            user.objects.get(username=username)
+            get_user_model().objects.get(username=username)
             login(request, user)
             return redirect("home")
         except AttributeError:
-            messages.error(
-                request, "Invalid username or password."
-            )
+            messages.error(request, "Invalid username or password.")
             return redirect("login")
+
+
+class LogoutPage(View):
+    @staticmethod
+    def get(request):
+        logout(request)
+        return redirect("login")
 
 
 class Home(View):
@@ -58,7 +63,7 @@ class RoomView(View):
         return render(request, "general/room.html", context)
 
 
-class CreateRoom(FormView):
+class CreateRoom(CustomLoginRequiredMixin, FormView):
     template_name = "general/room_form.html"
     form_class = RoomForm
     success_url = "/"
@@ -69,7 +74,7 @@ class CreateRoom(FormView):
         return super().form_valid(form)
 
 
-class UpdateRoom(UpdateView):
+class UpdateRoom(CustomLoginRequiredMixin, UpdateView):
     model = Room
     template_name = "general/room_form.html"
     form_class = RoomForm
@@ -80,7 +85,7 @@ class UpdateRoom(UpdateView):
         return super().form_valid(form)
 
 
-class DeleteRoom(DeleteView):
+class DeleteRoom(CustomLoginRequiredMixin, DeleteView):
     model = Room
     template_name = "general/delete.html"
     context_object_name = "room"

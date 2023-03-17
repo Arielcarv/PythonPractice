@@ -1,9 +1,10 @@
 from django.urls import path
 
-from .views import Home, RoomView, CreateRoom, UpdateRoom, DeleteRoom, LoginPage
+from .views import Home, RoomView, CreateRoom, UpdateRoom, DeleteRoom, LoginPage, LogoutPage
 
 urlpatterns = [
     path("login", LoginPage.as_view(), name="login"),
+    path("logout", LogoutPage.as_view(), name="logout"),
     path("", Home.as_view(), name="home"),
     path("room/<str:pk>", RoomView.as_view(), name="room"),
     path("create-room", CreateRoom.as_view(), name="create-room"),
