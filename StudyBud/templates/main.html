@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Main</title>
+  <title>{% block title %}{% endblock %}</title>
+  {% block css %}{% endblock %}
 </head>
 <body>
   {% include "navbar.html" %}
   {% block content %}
-
   {% endblock %}
 </body>
 </html>

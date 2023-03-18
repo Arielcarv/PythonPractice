@@ -1,13 +1,15 @@
 {% extends 'main.html' %}
-{% block title %}Room Form{% endblock %}
+{% block title %}Sign Up{% endblock %}
 {% block content %}
 
   <div>
     <form method="POST" action="">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Submit">
+      <input type="submit" value="Sign Up">
     </form>
+    <p>Already signed up?</p>
+    <a href="{% url 'login' %}">Log-in</a>
   </div>
 
 {% endblock %}

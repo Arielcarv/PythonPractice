@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <title>Delete</title>
   </head>
-  <body>
+
   <form method="POST" action="">
     {% csrf_token %}
     <p>Delete "{{ room }}". Are you sure ?</p>
     <a href="{{ request.META.HTTP_REFERER }}">Not this time.</a>
     <input type="submit" value="delete">
   </form>
-  </body>
+
 {% endblock %}

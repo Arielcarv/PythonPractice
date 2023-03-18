@@ -1,20 +1,11 @@
 {% extends 'main.html' %}
+{% block title %}Login{% endblock %}
 {% block content %}
-  <head>
-    <meta charset="UTF-8">
-    <title>Sign-In</title>
-  </head>
-  <body>
+
   <div>
     <form method="POST" action="">
       {% csrf_token %}
-      {% if messages %}
-        <ul class="messages">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+      {% include "messages.html" %}
       <label> Username:
         <input type="text" name="username" placeholder="Enter Username" required>
       </label>
@@ -23,8 +14,8 @@
       </label>
       <input type="submit" value="Login">
     </form>
+    <p>Haven't signed up yet?</p>
+    <a href="{% url 'register' %}">Sign Up</a>
   </div>
 
-
-  </body>
 {% endblock %}

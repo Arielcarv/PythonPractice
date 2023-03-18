@@ -8,10 +8,12 @@ from .views import (
     DeleteRoom,
     LoginPage,
     LogoutPage,
+    RegisterPage,
 )
 
 urlpatterns = [
     path("login", LoginPage.as_view(), name="login"),
+    path("register", RegisterPage.as_view(), name="register"),
     path("logout", LogoutPage.as_view(), name="logout"),
     path("", Home.as_view(), name="home"),
     path("room/<str:pk>", RoomView.as_view(), name="room"),
