@@ -11,7 +11,7 @@ from django.views import View
 from django.views.generic import FormView, UpdateView, DeleteView, CreateView
 
 from common.util import CustomLoginRequiredMixin
-from general.forms import RoomForm, SignUpForm
+from general.forms import RoomForm, SignUpForm, MessageForm
 from general.models import Room, Topic
 
 
@@ -22,6 +22,7 @@ class LoginPage(View):
     def get(self, request):
         return render(request, "login.html", self.context)
 
+    # TODO: Implement LoginView
     @staticmethod
     def post(request):
         username = request.POST.get("username")
@@ -78,12 +79,29 @@ class Home(View):
         return render(request, "general/home.html", context)
 
 
-class RoomView(CustomLoginRequiredMixin, View):
+class RoomView(CustomLoginRequiredMixin, CreateView):
+    form_class = MessageForm
+    template_name = "room.html"
+    context = {}
+    success_message = "Message registered successfully"
+
     @staticmethod
     def get(request, pk):
         room = Room.objects.get(id=pk)
-        context = {"room": room}
+        messages = room.message_set.all().order_by("-created")
+        context = { "room": room, "room_messages": messages }
         return render(request, "general/room.html", context)
+
+    def form_valid(self, form):
+        """This validates the form by adding room and user to it."""
+        print(form.instance.body)
+        form.instance.author = self.request.user
+        form.instance.room = Room.objects.get(pk=self.kwargs.get("pk"))
+        response = super().form_valid(form)
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy("room", kwargs={"pk": self.kwargs.get("pk")})
 
 
 class CreateRoom(CustomLoginRequiredMixin, FormView):
@@ -124,7 +142,7 @@ class UpdateRoom(UserPassesTestMixin, UpdateView):
             return super().dispatch(request, *args, **kwargs)
         except PermissionDenied:
             messages.error(
-                self.request, "You don't have permission to access this room."
+                self.request, "You don"t have permission to access this room."
             )
             return redirect("home")
 
