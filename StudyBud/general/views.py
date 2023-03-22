@@ -12,7 +12,7 @@ from django.views.generic import FormView, UpdateView, DeleteView, CreateView
 
 from common.util import CustomLoginRequiredMixin
 from general.forms import RoomForm, SignUpForm, MessageForm
-from general.models import Room, Topic
+from general.models import Room, Topic, Message
 
 
 class LoginPage(View):
@@ -89,16 +89,20 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     def get(request, pk):
         room = Room.objects.get(id=pk)
         messages = room.message_set.all().order_by("-created")
-        context = { "room": room, "room_messages": messages }
+        participants = room.participants.all()
+        context = {
+            "room": room,
+            "room_messages": messages,
+            "participants": participants,
+        }
         return render(request, "general/room.html", context)
 
     def form_valid(self, form):
         """This validates the form by adding room and user to it."""
-        print(form.instance.body)
         form.instance.author = self.request.user
         form.instance.room = Room.objects.get(pk=self.kwargs.get("pk"))
-        response = super().form_valid(form)
-        return response
+        form.instance.room.participants.add(form.instance.author)
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("room", kwargs={"pk": self.kwargs.get("pk")})
@@ -111,7 +115,6 @@ class CreateRoom(CustomLoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         form.instance.host = self.request.user
-        form.save()
         return super().form_valid(form)
 
 
@@ -123,13 +126,11 @@ class UpdateRoom(UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         """Check if the user is the host of the room or is a superuser."""
-        print("Inside test_func")
         if (
             self.request.user == self.get_object().host
             or self.request.user.is_superuser
         ):
             return True
-        print(self.get_object().host)
         PermissionDenied("You are not the host of this room.")
 
     def form_valid(self, form):
@@ -142,7 +143,7 @@ class UpdateRoom(UserPassesTestMixin, UpdateView):
             return super().dispatch(request, *args, **kwargs)
         except PermissionDenied:
             messages.error(
-                self.request, "You don"t have permission to access this room."
+                self.request, "You don't have permission to access this room."
             )
             return redirect("home")
 
@@ -156,3 +157,19 @@ class DeleteRoom(CustomLoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, "Room deleted successfully")
         return super().form_valid(form)
+
+
+class DeleteMessage(CustomLoginRequiredMixin, DeleteView):
+    model = Message
+    template_name = "general/delete.html"
+    context_object_name = "message"
+    success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        # if self.request.user != form.instance.user:
+        #     return False
+        messages.success(self.request, "Message deleted successfully")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("room", kwargs={"pk": self.object.room_id})
