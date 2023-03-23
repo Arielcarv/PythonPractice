@@ -7,6 +7,7 @@ from .views import (
     Home,
     LoginPage,
     LogoutPage,
+    UserProfilePage,
     RegisterPage,
     RoomView,
     UpdateRoom,
@@ -15,6 +16,7 @@ from .views import (
 urlpatterns = [
     path("login", LoginPage.as_view(), name="login"),
     path("register", RegisterPage.as_view(), name="register"),
+    path("profile/<str:pk>", UserProfilePage.as_view(), name="profile"),
     path("logout", LogoutPage.as_view(), name="logout"),
     path("", Home.as_view(), name="home"),
     path("room/<str:pk>", RoomView.as_view(), name="room"),

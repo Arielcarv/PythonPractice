@@ -5,7 +5,7 @@
   <div>
     <form method="POST" action="">
       {% csrf_token %}
-      {% include "messages.html" %}
+      {% include "components/messages_component.html" %}
       <label> Username:
         <input type="text" name="username" placeholder="Enter Username" required>
       </label>

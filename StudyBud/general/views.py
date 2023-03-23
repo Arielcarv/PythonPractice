@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, UpdateView, DeleteView, CreateView
+from django.views.generic import FormView, UpdateView, DeleteView, CreateView, DetailView
 
 from common.util import CustomLoginRequiredMixin
 from general.forms import RoomForm, SignUpForm, MessageForm
@@ -75,7 +75,13 @@ class Home(View):
         )
         topics = Topic.objects.all()
         room_count = rooms.count()
-        context = {"rooms": rooms, "room_count": room_count, "topics": topics}
+        messages = Message.objects.filter(Q(room__topic__name__iregex=url_params))
+        context = {
+            "rooms": rooms,
+            "room_count": room_count,
+            "topics": topics,
+            "room_messages": messages,
+        }
         return render(request, "general/home.html", context)
 
 
@@ -107,6 +113,19 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("room", kwargs={"pk": self.kwargs.get("pk")})
 
+
+class UserProfilePage(CustomLoginRequiredMixin, DetailView):
+    model = get_user_model()
+    template_name = "profile.html"
+    slug_field = 'username'
+    context_object_name = "profile"
+    success_url = reverse_lazy("home")
+    success_message = "Your profile was updated successfully"
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        # you can add additional logic here to customize the queryset
+        return obj
 
 class CreateRoom(CustomLoginRequiredMixin, FormView):
     template_name = "general/room_form.html"
@@ -166,8 +185,6 @@ class DeleteMessage(CustomLoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        # if self.request.user != form.instance.user:
-        #     return False
         messages.success(self.request, "Message deleted successfully")
         return super().form_valid(form)
 
