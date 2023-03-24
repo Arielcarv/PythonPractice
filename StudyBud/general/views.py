@@ -1,14 +1,20 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView, UpdateView, DeleteView, CreateView, DetailView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    FormView,
+    UpdateView,
+)
 
 from common.util import CustomLoginRequiredMixin
 from general.forms import RoomForm, SignUpForm, MessageForm
@@ -75,7 +81,9 @@ class Home(View):
         )
         topics = Topic.objects.all()
         room_count = rooms.count()
-        messages = Message.objects.filter(Q(room__topic__name__iregex=url_params))
+        messages = Message.objects.filter(
+            Q(room__topic__name__iregex=url_params)
+        )
         context = {
             "rooms": rooms,
             "room_count": room_count,
@@ -116,16 +124,27 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
 
 class UserProfilePage(CustomLoginRequiredMixin, DetailView):
     model = get_user_model()
-    template_name = "profile.html"
-    slug_field = 'username'
-    context_object_name = "profile"
-    success_url = reverse_lazy("home")
-    success_message = "Your profile was updated successfully"
+    template_name = "general/profile.html"
+    context_object_name = "user"
 
-    def get_object(self, queryset=None):
-        obj = super().get_object(queryset=queryset)
-        # you can add additional logic here to customize the queryset
-        return obj
+    def get(self, request, pk):
+        user = get_object_or_404(self.model, id=pk)
+        rooms = user.room_set.all()
+        room_messages = user.message_set.all()
+        topics = Topic.objects.all()
+        context = {
+            "user": user,
+            "rooms": rooms,
+            "room_messages": room_messages,
+            "topics": topics,
+        }
+        return render(request, self.template_name, context)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['room'] = Room.objects.filter(host=self.request.user)
+    #     return context
+
 
 class CreateRoom(CustomLoginRequiredMixin, FormView):
     template_name = "general/room_form.html"
