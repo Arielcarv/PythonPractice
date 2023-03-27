@@ -2,28 +2,29 @@
 {% load static %}
 {% block title %}Home{% endblock %}
 {% block css %}
-  <link rel="stylesheet" href="{% static 'home.css' %}">
+  <link rel="stylesheet" href="{% static 'style/home.css' %}">
 {% endblock %}
 
 {% block content %}
 
-  {% include "components/messages_component.html" %}
-  <div class="home-container">
-
-    <div>
-      {% include "components/topics_component.html" %}
+<main>
+    <div class="home-container">
+  
+      <div>
+        {% include "components/topics_component.html" %}
+      </div>
+  
+      <div>
+        <h5>{{ room_count }} Room{{ room_count|pluralize:",s" }} Available</h5>
+        <a href="{% url 'create-room' %}">CREATE ROOM</a>
+        {% include "components/feed_component.html" %}
+      </div>
+  
+      <div>
+        {% include "components/activity_component.html" %}
+      </div>
+  
     </div>
-
-    <div>
-      <h5>{{ room_count }} Room{{ room_count|pluralize:",s" }} Available</h5>
-      <a href="{% url 'create-room' %}">CREATE ROOM</a>
-      {% include "components/feed_component.html" %}
-    </div>
-
-    <div>
-      {% include "components/activity_component.html" %}
-    </div>
-
-  </div>
+</main>
 
 {% endblock content %}

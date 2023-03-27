@@ -140,11 +140,6 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
         }
         return render(request, self.template_name, context)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['room'] = Room.objects.filter(host=self.request.user)
-    #     return context
-
 
 class CreateRoom(CustomLoginRequiredMixin, FormView):
     template_name = "general/room_form.html"
