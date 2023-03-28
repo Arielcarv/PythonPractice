@@ -95,7 +95,7 @@ class Home(View):
 
 class RoomView(CustomLoginRequiredMixin, CreateView):
     form_class = MessageForm
-    template_name = "room.html"
+    template_name = "general/room.html"
     context = {}
     success_message = "Message registered successfully"
 
