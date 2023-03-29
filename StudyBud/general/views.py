@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -21,29 +21,14 @@ from general.forms import RoomForm, SignUpForm, MessageForm
 from general.models import Room, Topic, Message
 
 
-class LoginPage(View):
+class LoginPage(LoginView):
     template_name = "login.html"
-    context = {}
+    success_url = reverse_lazy("home")
+    redirect_authenticated_user = True
 
-    def get(self, request):
-        return render(request, "login.html", self.context)
-
-    # TODO: Implement LoginView
-    @staticmethod
-    def post(request):
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-        try:
-            get_user_model().objects.get(username=username)
-            login(request, user)
-            return redirect("home")
-        except AttributeError:
-            messages.error(request, "Invalid username or password.")
-            return redirect("login")
-        except get_user_model().DoesNotExist:
-            messages.error(request, "Username does not exist.")
-            return redirect("login")
+    def form_invalid(self, form):
+        messages.error(self.request, "Invalid username or password.")
+        return super().form_invalid(form)
 
 
 class RegisterPage(SuccessMessageMixin, CreateView):
