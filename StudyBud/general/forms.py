@@ -9,6 +9,7 @@ from general.models import Room, Message
 class RoomForm(ModelForm):
     class Meta:
         model = Room
+        required_fields = ["topic", "name"]
         fields = ["topic", "name", "description"]
 
 

@@ -12,7 +12,6 @@ from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
-    FormView,
     UpdateView,
 )
 
@@ -126,7 +125,7 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
         return render(request, self.template_name, context)
 
 
-class CreateRoom(CustomLoginRequiredMixin, FormView):
+class CreateRoom(CustomLoginRequiredMixin, CreateView):
     template_name = "general/room_form.html"
     form_class = RoomForm
     success_url = reverse_lazy("home")
@@ -134,6 +133,11 @@ class CreateRoom(CustomLoginRequiredMixin, FormView):
     def form_valid(self, form):
         form.instance.host = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["topics"] = Topic.objects.all()
+        return context
 
 
 class UpdateRoom(UserPassesTestMixin, UpdateView):
