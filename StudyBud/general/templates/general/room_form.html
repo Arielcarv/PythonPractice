@@ -2,14 +2,6 @@
 {% block title %}Room Form{% endblock %}
 {% block content %}
 
-  {#  <div>#}
-  {#    <form method="POST" action="">#}
-  {#      {% csrf_token %}#}
-  {#      {{ form.as_p }}#}
-  {#      <input type="submit" value="Submit">#}
-  {#    </form>#}
-  {#  </div>#}
-
   <main class="create-room layout">
     <div class="container">
       <div class="layout__box">
@@ -28,6 +20,8 @@
         </div>
         <div class="layout__body">
           <form class="form" method="POST" action="">
+            <h3>Create a new topic or select from the list down below.</h3>
+            <br>
             {% csrf_token %}
             <div class="form__group">
               {{ form.as_p }}

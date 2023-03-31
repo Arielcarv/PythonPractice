@@ -55,9 +55,7 @@ class LogoutPage(LogoutView):
 class Home(View):
     @staticmethod
     def get(request):
-        url_params = (
-            request.GET.get("query") if request.GET.get("query") else ""
-        )
+        url_params = request.GET.get("query") if request.GET.get("query") else ""
         rooms = Room.objects.filter(
             Q(topic__name__iregex=url_params)
             | Q(name__iregex=url_params)
@@ -65,9 +63,7 @@ class Home(View):
         )
         topics = Topic.objects.all()
         room_count = rooms.count()
-        messages = Message.objects.filter(
-            Q(room__topic__name__iregex=url_params)
-        )
+        messages = Message.objects.filter(Q(room__topic__name__iregex=url_params))
         context = {
             "rooms": rooms,
             "room_count": room_count,
@@ -131,6 +127,9 @@ class CreateRoom(CustomLoginRequiredMixin, CreateView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
+        if new_topic := "new_topic" in form.changed_data:
+            topic = Topic.objects.create(name=new_topic)
+            form.instance.topic = topic
         form.instance.host = self.request.user
         return super().form_valid(form)
 
@@ -168,6 +167,11 @@ class UpdateRoom(UserPassesTestMixin, UpdateView):
                 self.request, "You don't have permission to access this room."
             )
             return redirect("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["topics"] = Topic.objects.all()
+        return context
 
 
 class DeleteRoom(CustomLoginRequiredMixin, DeleteView):
