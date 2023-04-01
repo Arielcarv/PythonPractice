@@ -1,0 +1,9 @@
+{
+    "configurations": [
+        {
+            "type": "python",
+            "name": "Django Runserver",
+            "arguments": ["manage.py", "runserver"]
+        },
+    ]
+}
