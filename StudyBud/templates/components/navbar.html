@@ -32,7 +32,7 @@
       {% if request.user.is_authenticated %}
         <!-- Logged In Section -->
         <div class="header__user">
-          <a href="{% url 'profile' 1 %}">
+          <a href="{% url 'profile' request.user.id %}">
             <div class="avatar avatar--medium active">
               <img src="https://api.lorem.space/image/face?w=100&h=100"/>
             </div>
@@ -64,7 +64,7 @@
       {% endif %}
 
       <div class="dropdown-menu">
-        <a href="settings.html" class="dropdown-link">
+        <a href="{% url 'profile-update' %}" class="dropdown-link">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"

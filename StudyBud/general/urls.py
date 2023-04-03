@@ -11,12 +11,14 @@ from .views import (
     RegisterPage,
     RoomView,
     UpdateRoom,
+    UserProfileUpdate,
 )
 
 urlpatterns = [
     path("login", LoginPage.as_view(), name="login"),
     path("register", RegisterPage.as_view(), name="register"),
     path("profile/<str:pk>", UserProfilePage.as_view(), name="profile"),
+    path("profile-update/", UserProfileUpdate.as_view(), name="profile-update"),
     path("logout", LogoutPage.as_view(), name="logout"),
     path("", Home.as_view(), name="home"),
     path("room/<str:pk>", RoomView.as_view(), name="room"),
@@ -28,5 +30,4 @@ urlpatterns = [
         DeleteMessage.as_view(),
         name="delete-message",
     ),
-    # path("topic/<str:pk>", DeleteRoom.as_view(), name="topic"),
 ]

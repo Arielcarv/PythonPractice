@@ -6,7 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import (
     CreateView,
@@ -119,6 +119,23 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
             "topics": topics,
         }
         return render(request, self.template_name, context)
+
+
+class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
+    form_class = SignUpForm
+    template_name = "general/profile-update.html"
+    context_object_name = "user"
+    model = get_user_model()
+
+    def get_success_url(self):
+        return reverse("profile", kwargs={"pk": self.get_object().id})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form):
+        return super().form_valid(form)
 
 
 class CreateRoom(CustomLoginRequiredMixin, CreateView):
