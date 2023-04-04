@@ -1,6 +1,6 @@
 from django import forms
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model, password_validation
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import ModelForm
 
 from general.models import Room, Message
@@ -34,6 +34,33 @@ class SignUpForm(UserCreationForm):
             "password1",
             "password2",
         )
+
+
+class UserProfileUpdateForm(UserChangeForm):
+    password = forms.CharField(
+        label="Password", required=False, widget=forms.PasswordInput
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ("username", "first_name", "last_name", "email", "password")
+
+    def clean_password(self):
+        """If password is provided, validate it."""
+        password = self.cleaned_data.get("password")
+        if password:
+            password_validation.validate_password(password, self.instance)
+        return password
+
+    def save(self, commit=True):
+        """Save user model with new data."""
+        user = super().save(commit=False)
+        password = self.cleaned_data.get("password")
+        if password:
+            user.set_password(password)
+        if commit:
+            user.save()
+        return user
 
 
 class MessageForm(ModelForm):

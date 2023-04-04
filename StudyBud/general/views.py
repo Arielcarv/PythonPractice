@@ -6,7 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import (
     CreateView,
@@ -16,7 +16,12 @@ from django.views.generic import (
 )
 
 from common.util import CustomLoginRequiredMixin
-from general.forms import RoomForm, SignUpForm, MessageForm
+from general.forms import (
+    RoomForm,
+    SignUpForm,
+    MessageForm,
+    UserProfileUpdateForm,
+)
 from general.models import Room, Topic, Message
 
 
@@ -122,19 +127,23 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
 
 
 class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
-    form_class = SignUpForm
+    form_class = UserProfileUpdateForm
     template_name = "general/profile-update.html"
     context_object_name = "user"
-    model = get_user_model()
+
+    def get_object(self):
+        return self.request.user
 
     def get_success_url(self):
-        return reverse("profile", kwargs={"pk": self.get_object().id})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
 
     def form_valid(self, form):
+        password = form.cleaned_data.get("password")
+        form.instance.set_password(password) if password else setattr(
+            form.instance,
+            "password",
+            get_user_model().objects.only("password").get(pk=self.object.pk).password,
+        )
         return super().form_valid(form)
 
 
