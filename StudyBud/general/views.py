@@ -68,12 +68,12 @@ class Home(View):
         )
         topics = Topic.objects.all()
         room_count = rooms.count()
-        messages = Message.objects.filter(Q(room__topic__name__iregex=url_params))
+        room_messages = Message.objects.filter(Q(room__topic__name__iregex=url_params))
         context = {
             "rooms": rooms,
             "room_count": room_count,
             "topics": topics,
-            "room_messages": messages,
+            "room_messages": room_messages,
         }
         return render(request, "general/home.html", context)
 
@@ -84,17 +84,16 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     context = {}
     success_message = "Message registered successfully"
 
-    @staticmethod
-    def get(request, pk):
+    def get(self, request, pk):
         room = Room.objects.get(id=pk)
-        messages = room.message_set.all().order_by("-created")
+        room_messages = room.message_set.all().order_by("-created")
         participants = room.participants.all()
         context = {
             "room": room,
-            "room_messages": messages,
+            "room_messages": room_messages,
             "participants": participants,
         }
-        return render(request, "general/room.html", context)
+        return render(self.request, "general/room.html", context)
 
     def form_valid(self, form):
         """This validates the form by adding room and user to it."""
