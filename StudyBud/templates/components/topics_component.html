@@ -11,12 +11,12 @@
     {% for topic in topics %}
     <li>
       <a href="{% url 'home' %}?query={{ topic.name }}"
-        >{{ topic.name }} <span>{{topic.room_set.all.count}}</span></a
+        >{{ topic.name }} <span>{{ topic.room_set.all.count }}</span></a
       >
     </li>
     {% endfor %}
   </ul>
-  <a class="btn btn--link" href="topics.html">
+  <a class="btn btn--link" href="{% url 'topics' %}">
     More
     <svg
 

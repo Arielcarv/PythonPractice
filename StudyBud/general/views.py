@@ -58,15 +58,16 @@ class LogoutPage(LogoutView):
 
 
 class Home(View):
-    @staticmethod
-    def get(request):
-        url_params = request.GET.get("query") if request.GET.get("query") else ""
+    def get(self, request):
+        url_params = (
+            self.request.GET.get("query") if self.request.GET.get("query") else ""
+        )
         rooms = Room.objects.filter(
             Q(topic__name__endswith=url_params)
             | Q(name__iregex=url_params)
             | Q(description__iregex=url_params)
         )
-        topics = Topic.objects.all()
+        topics = Topic.objects.all()[0:5]
         room_count = rooms.count()
         room_messages = Message.objects.filter(Q(room__topic__name__iregex=url_params))
         context = {
@@ -75,7 +76,17 @@ class Home(View):
             "topics": topics,
             "room_messages": room_messages,
         }
-        return render(request, "general/home.html", context)
+        return render(self.request, "general/home.html", context)
+
+
+class Topics(View):
+    def get(self, request):
+        url_params = (
+            self.request.GET.get("query") if self.request.GET.get("query") else ""
+        )
+        topics = Topic.objects.filter(Q(name__endswith=url_params))
+        context = {"topics": topics}
+        return render(self.request, "general/topics.html", context)
 
 
 class RoomView(CustomLoginRequiredMixin, CreateView):
@@ -84,7 +95,7 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     context = {}
     success_message = "Message registered successfully"
 
-    def get(self, request, pk):
+    def get(self, pk, **kwargs):
         room = Room.objects.get(id=pk)
         room_messages = room.message_set.all().order_by("-created")
         participants = room.participants.all()
@@ -111,7 +122,7 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
     template_name = "general/profile.html"
     context_object_name = "user"
 
-    def get(self, request, pk):
+    def get(self, pk, **kwargs):
         user = get_object_or_404(self.model, id=pk)
         rooms = user.room_set.all()
         room_messages = user.message_set.all()
@@ -122,16 +133,13 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
             "room_messages": room_messages,
             "topics": topics,
         }
-        return render(request, self.template_name, context)
+        return render(self.request, self.template_name, context)
 
 
 class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
     form_class = UserProfileUpdateForm
     template_name = "general/profile-update.html"
     context_object_name = "user"
-
-    def get_object(self):
-        return self.request.user
 
     def get_success_url(self):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})

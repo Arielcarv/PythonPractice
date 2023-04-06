@@ -12,15 +12,17 @@ from .views import (
     RoomView,
     UpdateRoom,
     UserProfileUpdate,
+    Topics,
 )
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
+    path("topics", Topics.as_view(), name="topics"),
     path("login", LoginPage.as_view(), name="login"),
+    path("logout", LogoutPage.as_view(), name="logout"),
     path("register", RegisterPage.as_view(), name="register"),
     path("profile/<str:pk>", UserProfilePage.as_view(), name="profile"),
     path("profile-update/", UserProfileUpdate.as_view(), name="profile-update"),
-    path("logout", LogoutPage.as_view(), name="logout"),
     path("room/<str:pk>", RoomView.as_view(), name="room"),
     path("create-room", CreateRoom.as_view(), name="create-room"),
     path("update-room/<str:pk>", UpdateRoom.as_view(), name="update-room"),
