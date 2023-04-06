@@ -62,7 +62,7 @@ class Home(View):
     def get(request):
         url_params = request.GET.get("query") if request.GET.get("query") else ""
         rooms = Room.objects.filter(
-            Q(topic__name__iregex=url_params)
+            Q(topic__name__endswith=url_params)
             | Q(name__iregex=url_params)
             | Q(description__iregex=url_params)
         )
