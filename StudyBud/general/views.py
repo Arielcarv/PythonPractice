@@ -59,9 +59,7 @@ class LogoutPage(LogoutView):
 
 class Home(View):
     def get(self, request):
-        url_params = (
-            self.request.GET.get("query") if self.request.GET.get("query") else ""
-        )
+        url_params = self.request.GET.get("query") if self.request.GET.get("query") else ""
         rooms = Room.objects.filter(
             Q(topic__name__endswith=url_params)
             | Q(name__iregex=url_params)
@@ -81,9 +79,7 @@ class Home(View):
 
 class Topics(View):
     def get(self, request):
-        url_params = (
-            self.request.GET.get("query") if self.request.GET.get("query") else ""
-        )
+        url_params = self.request.GET.get("query") if self.request.GET.get("query") else ""
         topics = Topic.objects.filter(Q(name__endswith=url_params))
         context = {"topics": topics}
         return render(self.request, "general/topics.html", context)
@@ -180,10 +176,7 @@ class UpdateRoom(UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         """Check if the user is the host of the room or is a superuser."""
-        if (
-            self.request.user == self.get_object().host
-            or self.request.user.is_superuser
-        ):
+        if self.request.user == self.get_object().host or self.request.user.is_superuser:
             return True
         PermissionDenied("You are not the host of this room.")
 
@@ -196,9 +189,7 @@ class UpdateRoom(UserPassesTestMixin, UpdateView):
         try:
             return super().dispatch(request, *args, **kwargs)
         except PermissionDenied:
-            messages.error(
-                self.request, "You don't have permission to access this room."
-            )
+            messages.error(self.request, "You don't have permission to access this room.")
             return redirect("home")
 
     def get_context_data(self, **kwargs):

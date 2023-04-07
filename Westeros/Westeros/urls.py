@@ -26,6 +26,6 @@ api.add_router("lannister/", lannister_router)
 api.add_router("targaryen/", targaryen_router)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', api.urls),
+    path("admin/", admin.site.urls),
+    path("api/", api.urls),
 ]

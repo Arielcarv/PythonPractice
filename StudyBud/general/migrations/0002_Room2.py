@@ -43,9 +43,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="room",
             name="participants",
-            field=models.ManyToManyField(
-                related_name="participants", to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ManyToManyField(related_name="participants", to=settings.AUTH_USER_MODEL),
         ),
         migrations.CreateModel(
             name="Message",
