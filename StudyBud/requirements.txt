@@ -1,4 +1,4 @@
 black==23.3.0
-django==4.1.7
+django==4.2
 flake8==6.0.0
-pre-commit==3.2.1
+pre-commit==3.2.2
