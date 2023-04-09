@@ -85,6 +85,15 @@ class Topics(View):
         return render(self.request, "general/topics.html", context)
 
 
+class ActivitiesView(View):
+    def get(self, request):
+        room_messages = Message.objects.all().order_by("-created")
+        context = {
+            "room_messages": room_messages,
+        }
+        return render(self.request, "general/activities.html", context)
+
+
 class RoomView(CustomLoginRequiredMixin, CreateView):
     form_class = MessageForm
     template_name = "general/room.html"

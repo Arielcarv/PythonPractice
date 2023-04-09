@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    ActivitiesView,
     CreateRoom,
     DeleteMessage,
     DeleteRoom,
@@ -18,6 +19,7 @@ from .views import (
 urlpatterns = [
     path("", Home.as_view(), name="home"),
     path("topics", Topics.as_view(), name="topics"),
+    path("activities", ActivitiesView.as_view(), name="activities"),
     path("login", LoginPage.as_view(), name="login"),
     path("logout", LogoutPage.as_view(), name="logout"),
     path("register", RegisterPage.as_view(), name="register"),
