@@ -49,6 +49,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "StudyBud.urls"
+AUTH_USER_MODEL = "general.User"
 
 TEMPLATES = [
     {
