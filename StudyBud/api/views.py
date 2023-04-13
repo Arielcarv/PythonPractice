@@ -7,6 +7,7 @@ from api.serializers import RoomSerializer
 
 
 class GetRoutes(APIView):
+    """Returns a list of all routes in the API"""
     def get(self, request):
         routes = [
             "GET /api/ - API",
@@ -17,6 +18,7 @@ class GetRoutes(APIView):
 
 
 class GetRooms(APIView):
+    """Returns a list of all rooms"""
     def get(self, request):
         rooms = Room.objects.all()
         serialized_rooms = RoomSerializer(rooms, many=True)
@@ -24,6 +26,7 @@ class GetRooms(APIView):
 
 
 class GetRoom(APIView):
+    """Returns a specific room"""
     def get_object(self, pk):
         try:
             return Room.objects.get(pk=pk)
