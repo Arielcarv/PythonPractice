@@ -11,7 +11,7 @@ class RoomForm(ModelForm):
 
     class Meta:
         model = Room
-        required_fields = ["topic", "name"]
+        required_fields = ["name"]
         fields = ["new_topic", "topic", "name", "description"]
 
 
@@ -22,14 +22,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = (
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "password1",
-            "password2",
-        )
+        fields = ("username", "first_name", "last_name", "email", "password1", "password2", "bio")
 
 
 class UserProfileUpdateForm(UserChangeForm):

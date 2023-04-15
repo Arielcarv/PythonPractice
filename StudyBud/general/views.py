@@ -100,7 +100,7 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     context = {}
     success_message = "Message registered successfully"
 
-    def get(self, pk, **kwargs):
+    def get(self, request, pk):
         room = Room.objects.get(id=pk)
         room_messages = room.message_set.all().order_by("-created")
         participants = room.participants.all()
@@ -165,8 +165,8 @@ class CreateRoom(CustomLoginRequiredMixin, CreateView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        if new_topic := "new_topic" in form.changed_data:
-            topic = Topic.objects.create(name=new_topic)
+        if "new_topic" in form.changed_data:
+            topic = Topic.objects.create(name=form.cleaned_data.get("new_topic"))
             form.instance.topic = topic
         form.instance.host = self.request.user
         return super().form_valid(form)
