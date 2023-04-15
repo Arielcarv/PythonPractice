@@ -5,14 +5,14 @@ from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import (
     CreateView,
     DeleteView,
     DetailView,
     UpdateView,
+    TemplateView,
 )
 
 from common.util import CustomLoginRequiredMixin
@@ -57,8 +57,10 @@ class LogoutPage(LogoutView):
     next_page = reverse_lazy("login")
 
 
-class Home(View):
-    def get(self, request):
+class Home(TemplateView):
+    template_name = "general/home.html"
+
+    def get(self, request, **kwargs):
         url_params = self.request.GET.get("query") if self.request.GET.get("query") else ""
         rooms = Room.objects.filter(
             Q(topic__name__endswith=url_params)
@@ -74,24 +76,28 @@ class Home(View):
             "topics": topics,
             "room_messages": room_messages,
         }
-        return render(self.request, "general/home.html", context)
+        return super().get(self.request, self.template_name, context)
 
 
-class Topics(View):
-    def get(self, request):
+class Topics(TemplateView):
+    template_name = "general/topics.html"
+
+    def get(self, request, **kwargs):
         url_params = self.request.GET.get("query") if self.request.GET.get("query") else ""
         topics = Topic.objects.filter(Q(name__endswith=url_params))
         context = {"topics": topics}
-        return render(self.request, "general/topics.html", context)
+        return super().get(self.request, self.template_name, context)
 
 
-class ActivitiesView(View):
-    def get(self, request):
+class ActivitiesView(TemplateView):
+    template_name = "general/activities.html"
+
+    def get(self, request, **kwargs):
         room_messages = Message.objects.all().order_by("-created")
         context = {
             "room_messages": room_messages,
         }
-        return render(self.request, "general/activities.html", context)
+        return super().get(self.request, self.template_name, context)
 
 
 class RoomView(CustomLoginRequiredMixin, CreateView):
@@ -100,8 +106,8 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     context = {}
     success_message = "Message registered successfully"
 
-    def get(self, request, pk):
-        room = Room.objects.get(id=pk)
+    def get(self, request, **kwargs):
+        room = Room.objects.get(id=kwargs.get("pk"))
         room_messages = room.message_set.all().order_by("-created")
         participants = room.participants.all()
         context = {
@@ -109,7 +115,7 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
             "room_messages": room_messages,
             "participants": participants,
         }
-        return render(self.request, "general/room.html", context)
+        return super().get(self.request, "general/room.html", context)
 
     def form_valid(self, form):
         """This validates the form by adding room and user to it."""
@@ -127,8 +133,8 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
     template_name = "general/profile.html"
     context_object_name = "user"
 
-    def get(self, pk, **kwargs):
-        user = get_object_or_404(self.model, id=pk)
+    def get(self, request, **kwargs):
+        user = get_object_or_404(self.model, id=kwargs.get("pk"))
         rooms = user.room_set.all()
         room_messages = user.message_set.all()
         topics = Topic.objects.all()
@@ -138,7 +144,7 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
             "room_messages": room_messages,
             "topics": topics,
         }
-        return render(self.request, self.template_name, context)
+        return super().get(self.request, self.template_name, context)
 
 
 class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
@@ -154,7 +160,7 @@ class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
         form.instance.set_password(password) if password else setattr(
             form.instance,
             "password",
-            get_user_model().objects.only("password").get(pk=self.object.pk).password,
+            get_user_model().objects.only("password").get().password,
         )
         return super().form_valid(form)
 
