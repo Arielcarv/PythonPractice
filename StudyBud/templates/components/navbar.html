@@ -34,7 +34,7 @@
         <div class="header__user">
           <a href="{% url 'profile' request.user.id %}">
             <div class="avatar avatar--medium active">
-              <img src="https://api.lorem.space/image/face?w=100&h=100"/>
+              <img src="{{ request.user.avatar.url }}"/>
             </div>
             <p>
               {{ request.user.username|capfirst }}
@@ -58,7 +58,8 @@
       {% else %}
         <!-- Not Logged In Section -->
         <a href="{% url 'login' %}">
-          <img src="{% static 'img/avatar.svg' %}"/>
+          <img src="{{ request.user.avatar.url }}"/>
+          <h1>{{ request.user.avatar }}</h1>
           <p>Login</p>
         </a>
       {% endif %}
