@@ -9,6 +9,7 @@ from general.models import Room, Message
 class RoomForm(ModelForm):
     new_topic = forms.CharField(max_length=200, required=False, label="New Topic (Optional)")
 
+    # TODO: Allow users to add a new topic or use an existing one. Make old topic not required.
     class Meta:
         model = Room
         required_fields = ["name"]
@@ -22,7 +23,15 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ("username", "first_name", "last_name", "email", "password1", "password2", "bio")
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "password1",
+            "password2",
+            "bio",
+        )
 
 
 class UserProfileUpdateForm(UserChangeForm):

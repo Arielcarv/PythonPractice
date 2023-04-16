@@ -5,7 +5,7 @@ from django.contrib.auth.views import LogoutView, LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -60,7 +60,7 @@ class LogoutPage(LogoutView):
 class Home(TemplateView):
     template_name = "general/home.html"
 
-    def get(self, request, **kwargs):
+    def get_context_data(self):
         url_params = self.request.GET.get("query") if self.request.GET.get("query") else ""
         rooms = Room.objects.filter(
             Q(topic__name__endswith=url_params)
@@ -76,28 +76,28 @@ class Home(TemplateView):
             "topics": topics,
             "room_messages": room_messages,
         }
-        return super().get(self.request, self.template_name, context)
+        return context
 
 
 class Topics(TemplateView):
     template_name = "general/topics.html"
 
-    def get(self, request, **kwargs):
+    def get_context_data(self):
         url_params = self.request.GET.get("query") if self.request.GET.get("query") else ""
         topics = Topic.objects.filter(Q(name__endswith=url_params))
         context = {"topics": topics}
-        return super().get(self.request, self.template_name, context)
+        return context
 
 
 class ActivitiesView(TemplateView):
     template_name = "general/activities.html"
 
-    def get(self, request, **kwargs):
+    def get_context_data(self):
         room_messages = Message.objects.all().order_by("-created")
         context = {
             "room_messages": room_messages,
         }
-        return super().get(self.request, self.template_name, context)
+        return context
 
 
 class RoomView(CustomLoginRequiredMixin, CreateView):
@@ -106,8 +106,8 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
     context = {}
     success_message = "Message registered successfully"
 
-    def get(self, request, **kwargs):
-        room = Room.objects.get(id=kwargs.get("pk"))
+    def get_context_data(self):
+        room = Room.objects.get(id=self.kwargs.get("pk"))
         room_messages = room.message_set.all().order_by("-created")
         participants = room.participants.all()
         context = {
@@ -115,7 +115,7 @@ class RoomView(CustomLoginRequiredMixin, CreateView):
             "room_messages": room_messages,
             "participants": participants,
         }
-        return super().get(self.request, "general/room.html", context)
+        return context
 
     def form_valid(self, form):
         """This validates the form by adding room and user to it."""
@@ -133,8 +133,8 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
     template_name = "general/profile.html"
     context_object_name = "user"
 
-    def get(self, request, **kwargs):
-        user = get_object_or_404(self.model, id=kwargs.get("pk"))
+    def get_context_data(self, **kwargs):
+        user = self.get_object()
         rooms = user.room_set.all()
         room_messages = user.message_set.all()
         topics = Topic.objects.all()
@@ -144,7 +144,7 @@ class UserProfilePage(CustomLoginRequiredMixin, DetailView):
             "room_messages": room_messages,
             "topics": topics,
         }
-        return super().get(self.request, self.template_name, context)
+        return context
 
 
 class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
