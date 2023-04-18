@@ -4,12 +4,18 @@ from django.db import models
 
 
 class User(AbstractUser):
+    DEFAULT_AVATAR = "avatar.svg"
     email = models.EmailField(unique=True)
     bio = models.TextField(null=True)
-    avatar = models.ImageField(default="avatar.svg", upload_to="avatars", null=True, blank=True)
+    avatar = models.ImageField(default=DEFAULT_AVATAR, upload_to="avatars", null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    def save(self, *args, **kwargs):
+        if not self.avatar:
+            self.avatar = self.DEFAULT_AVATAR
+        super(User, self).save(*args, **kwargs)
 
 
 class Topic(models.Model):
