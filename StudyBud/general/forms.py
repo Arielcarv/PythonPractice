@@ -9,10 +9,9 @@ from general.models import Room, Message
 class RoomForm(ModelForm):
     new_topic = forms.CharField(max_length=200, required=False, label="New Topic (Optional)")
 
-    # TODO: Allow users to add a new topic or use an existing one. Make old topic not required.
     class Meta:
         model = Room
-        required_fields = ["name"]
+        required_fields = ["name", "topic"]
         fields = ["new_topic", "topic", "name", "description"]
 
 
