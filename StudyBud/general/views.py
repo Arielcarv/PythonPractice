@@ -152,6 +152,9 @@ class UserProfileUpdate(CustomLoginRequiredMixin, UpdateView):
     template_name = "general/profile-update.html"
     context_object_name = "user"
 
+    def get_object(self, **kwargs):
+        return self.request.user
+
     def get_success_url(self):
         return reverse_lazy("profile", kwargs={"pk": self.request.user.pk})
 

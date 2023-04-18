@@ -38,7 +38,7 @@ class UserProfileUpdateForm(UserChangeForm):
 
     class Meta:
         model = get_user_model()
-        fields = ("username", "first_name", "last_name", "email", "password")
+        fields = ("username", "first_name", "last_name", "email", "password", "bio", "avatar")
 
     def clean_password(self):
         """If password is provided, validate it."""
