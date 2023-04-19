@@ -31,7 +31,7 @@ class LoginPage(LoginView):
     redirect_authenticated_user = True
 
     def form_invalid(self, form):
-        messages.error(self.request, "Invalid username or password.")
+        messages.error(self.request, "Invalid E-mail or Password.")
         return super().form_invalid(form)
 
 
