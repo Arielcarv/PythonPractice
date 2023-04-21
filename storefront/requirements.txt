@@ -1,2 +1,2 @@
-django
-django-debug-toolbar
+django==4.2
+django-debug-toolbar==4.0.0
