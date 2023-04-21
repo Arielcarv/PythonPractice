@@ -1,21 +1,19 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 
-# Create your views here.
 def calculate():
     x = 1
     y = 2
-    return x
+    return x, y
 
 
 def say(request):
-    x = calculate()
+    x, y = calculate()
 
     context = {
         "name": "Ariel",
-        "x": 1,
-        "y": 2,
+        "x": x,
+        "y": y,
     }
     return render(request, "hello.html", context)
 
