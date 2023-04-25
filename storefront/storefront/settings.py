@@ -87,7 +87,8 @@ DATABASES = {
         "NAME": "storefront",
         "USER": "ariel",
         "PASSWORD": "123456",
-        "HOST": "172.17.0.1",
+        "HOST": "127.0.0.1",
+        # "HOST": "172.17.0.1",
         "PORT": "3306",
     }
 }
