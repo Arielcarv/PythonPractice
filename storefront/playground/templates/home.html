@@ -12,10 +12,10 @@
   <a href="{% url 'hello' %}">Hello</a>
   <a href="{% url 'admin:index' %}">Admin</a>
   <h3>Products List:</h3>
-  <ol>
+  <ul>
     {% for product in products %}
         <li>{{ product }}</li>
     {% endfor %}
-  </ol>
+  </ul>
 </body>
 </html>
