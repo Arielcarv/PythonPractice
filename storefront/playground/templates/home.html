@@ -9,13 +9,28 @@
   <title>Home</title>
 </head>
 <body>
-  <a href="{% url 'hello' %}">Hello</a>
-  <a href="{% url 'admin:index' %}">Admin</a>
-  <h3>Products List:</h3>
-  <ul>
-    {% for product in products %}
-        <li>{{ product }}</li>
-    {% endfor %}
-  </ul>
+  <section class="links">  
+    <a href="{% url 'hello' %}">Hello</a>
+    <a href="{% url 'admin:index' %}">Admin</a>
+  </section>
+  <section class="products">
+    <div class="left-products">
+      <h3>Left Products List:</h3>
+      <ul>
+        {% for product in products %}
+          <li>{{ product }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="right-products">
+      <h3>Right Products List:</h3>
+      <ul>
+        {% for order in last_5_orders %}
+          <li>{{ order }} - {{order.customer}} : {{ order.placed_at }}</li>
+          <li>{{ order.orderitem_set__product }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
 </body>
 </html>
