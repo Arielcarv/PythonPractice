@@ -1,5 +1,4 @@
-from django.db.models import Value, F, Func
-from django.db.models.aggregates import Count, Min
+from django.db.models import Value, F, Func, Min, Count
 from django.db.models.functions import Concat
 from django.shortcuts import render
 
@@ -34,12 +33,16 @@ def home(request):
         full_name_2=Concat("first_name", Value(" "), "last_name"),
     )
 
+    """Orders by Customer"""
+    orders_by_customer = Customer.objects.annotate(oders_count=Count("order"))
+
     context = {
         "products": list(products),
         "last_5_orders": last_5_orders,
         "aggregation_result": aggregation_result,
         "annotate_queryset": list(annotate_queryset),
         "database_function_queryset": list(database_function_queryset),
+        "orders_by_customer": list(orders_by_customer),
     }
     return render(request, "home.html", context)
 
