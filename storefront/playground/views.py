@@ -1,8 +1,10 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.shortcuts import render
 
 from store.models import Product, OrderItem, Order, Customer
+from tags.models import TaggedItem
 
 
 def home(request):
@@ -41,6 +43,12 @@ def home(request):
         discounted_price=ExpressionWrapper(F("unit_price") * 0.8, output_field=DecimalField())
     )
 
+    """Content Types"""
+    content_type_instance = ContentType.objects.get_for_model(Product)
+    tagged_items = TaggedItem.objects.select_related("tag").filter(
+        content_type=content_type_instance, object_id=1
+    )
+
     context = {
         "products": list(products),
         "last_5_orders": last_5_orders,
@@ -49,6 +57,7 @@ def home(request):
         "database_function_queryset": list(database_function_queryset),
         "orders_by_customer": list(orders_by_customer),
         "discounted_price": list(discounted_price),
+        "tagged_items": list(tagged_items),
     }
     return render(request, "home.html", context)
 
