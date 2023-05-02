@@ -1,4 +1,4 @@
-from django.db.models import Value, F, Func, Min, Count
+from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.shortcuts import render
 
@@ -36,6 +36,11 @@ def home(request):
     """Orders by Customer"""
     orders_by_customer = Customer.objects.annotate(oders_count=Count("order"))
 
+    """Expressions Wrappers"""
+    discounted_price = Product.objects.annotate(
+        discounted_price=ExpressionWrapper(F("unit_price") * 0.8, output_field=DecimalField())
+    )
+
     context = {
         "products": list(products),
         "last_5_orders": last_5_orders,
@@ -43,6 +48,7 @@ def home(request):
         "annotate_queryset": list(annotate_queryset),
         "database_function_queryset": list(database_function_queryset),
         "orders_by_customer": list(orders_by_customer),
+        "discounted_price": list(discounted_price),
     }
     return render(request, "home.html", context)
 
