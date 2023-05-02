@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.shortcuts import render
@@ -44,10 +43,7 @@ def home(request):
     )
 
     """Content Types"""
-    content_type_instance = ContentType.objects.get_for_model(Product)
-    tagged_items = TaggedItem.objects.select_related("tag").filter(
-        content_type=content_type_instance, object_id=1
-    )
+    tagged_items = TaggedItem.objects.get_tags_for(Product, 1)
 
     context = {
         "products": list(products),
