@@ -7,7 +7,7 @@ class Promotion(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.description
 
 
@@ -17,8 +17,11 @@ class Collection(models.Model):
         "Product", on_delete=models.SET_NULL, null=True, related_name="+"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
+
+    class Meta:
+        ordering = ["title"]
 
 
 class Product(models.Model):
@@ -31,12 +34,15 @@ class Product(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name="+")
     promotions = models.ManyToManyField(Promotion)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
     @property
     def price_display(self):
-        return f"${self.price:.2f}"
+        return f"${self.unit_price:.2f}"
+
+    class Meta:
+        ordering = ["title"]
 
 
 class Customer(models.Model):
@@ -62,11 +68,12 @@ class Customer(models.Model):
 
     class Meta:
         db_table = "store_customer"
+        ordering = ["first_name", "last_name"]
         indexes = [
             models.Index(fields=["first_name", "last_name"]),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
 
@@ -86,8 +93,11 @@ class Order(models.Model):
     )
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Order #{self.id}"
+
+    class Meta:
+        ordering = ["-placed_at"]
 
 
 class OrderItem(models.Model):
@@ -96,7 +106,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.product.title} x{self.quantity}"
 
 
@@ -111,7 +121,7 @@ class Cart(models.Model):
     products = models.ForeignKey(Product, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Cart #{self.id}"
 
 
