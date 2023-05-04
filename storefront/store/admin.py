@@ -29,7 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
     def inventory_status(self, product):
         if product.inventory > 10:
             return "OK"
-        if 0 <= product.inventory <= 10:
+        if 0 > product.inventory <= 10:
             return "Low"
         return "Out"
 
