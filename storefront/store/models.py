@@ -109,6 +109,9 @@ class OrderItem(models.Model):
     def __str__(self) -> str:
         return f"{self.product.title} x{self.quantity}"
 
+    class Meta:
+        ordering = ["id"]
+
 
 class Address(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
