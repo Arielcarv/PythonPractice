@@ -1,10 +1,24 @@
 from django.contrib import admin
+from django.db.models import QuerySet, Count
+from django.http import HttpRequest
 
 from store.models import Product, Customer, Promotion, Order, Address, Collection, OrderItem, Cart
 
 admin.AdminSite.site_header = "Storefront Admin"
 admin.AdminSite.site_title = "Storefront Admin Portal"
 admin.AdminSite.index_title = "Storefront Administration"
+
+
+@admin.register(Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    list_display = ["title", "products_count"]
+
+    @admin.display(ordering="products_count")
+    def products_count(self, collection):
+        return collection.products_count
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
+        return super().get_queryset(request).annotate(products_count=Count("featured_product_id"))
 
 
 @admin.register(Customer)
@@ -49,5 +63,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 admin.site.register(Address)
 admin.site.register(Cart)
-admin.site.register(Collection)
 admin.site.register(Promotion)
