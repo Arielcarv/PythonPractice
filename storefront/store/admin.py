@@ -1,3 +1,5 @@
+from typing import List, Tuple, Any
+
 from django.contrib import admin
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest
@@ -9,6 +11,20 @@ from store.models import Product, Customer, Promotion, Order, Address, Collectio
 admin.AdminSite.site_header = "Storefront Admin"
 admin.AdminSite.site_title = "Storefront Admin Portal"
 admin.AdminSite.index_title = "Storefront Administration"
+
+
+class InventoryFilter(admin.SimpleListFilter):
+    title = "inventory"
+    parameter_name = "inventory"
+
+    def lookups(self, request: HttpRequest, model_admin: admin.ModelAdmin) -> List[Tuple[Any, str]]:
+        return [("0>=,<=10", "Low"), (">10", "OK")]
+
+    def queryset(self, request: HttpRequest, queryset: QuerySet) -> QuerySet:
+        if self.value() == "0>=,<=10":
+            return queryset.filter(inventory__gte=0, inventory__lte=10)
+        if self.value() == ">10":
+            return queryset.filter(inventory__gt=10)
 
 
 @admin.register(Collection)
@@ -56,8 +72,9 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["title", "unit_price", "inventory_status", "collection_title"]
+    list_display = ["title", "unit_price", "inventory_status", "inventory", "collection_title"]
     list_editable = ["unit_price"]
+    list_filter = ["collection", "last_update", InventoryFilter]
     list_per_page = 100
     list_select_related = ["collection"]
 
