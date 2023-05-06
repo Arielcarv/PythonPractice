@@ -1,14 +1,12 @@
 from typing import List, Tuple, Any
 
 from django.contrib import admin, messages
-from django.contrib.contenttypes.admin import GenericTabularInline
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
 
 from store.models import Product, Customer, Promotion, Order, Address, Collection, OrderItem, Cart
-from tags.models import TaggedItem
 
 admin.AdminSite.site_header = "Storefront Admin"
 admin.AdminSite.site_title = "Storefront Admin Portal"
@@ -90,20 +88,11 @@ class OrderAdmin(admin.ModelAdmin):
     list_select_related = ["customer"]
 
 
-class TagInline(GenericTabularInline):
-    autocomplete_fields = ["tag"]
-    extra = 1
-    model = TaggedItem
-
-
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = ["clear_inventory"]
     autocomplete_fields = ["collection"]
-    inlines = [TagInline]
-    prepopulated_fields = {
-        "slug": ["title"]
-    }
+    prepopulated_fields = {"slug": ["title"]}
     search_fields = ["title"]
     list_display = ["title", "unit_price", "inventory_status", "inventory", "collection_title"]
     list_editable = ["unit_price"]
