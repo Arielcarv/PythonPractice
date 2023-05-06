@@ -2,10 +2,14 @@
     "python.defaultInterpreterPath": ".venv/bin/python",
     "python.formatting.provider": "black",
     "python.formatting.blackPath": ".venv/bin/black",
-    "python.linting.flake8Path": ".venv/bin/flake8",
+    "editor.formatOnSave": true,
     "python.linting.enabled": true,
+    "python.linting.flake8Path": ".venv/bin/flake8",
+    "python.linting.flake8Enabled": true,
     "python.linting.lintOnSave": true,
     "python.linting.pylintEnabled": false,
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "off",
     "files.associations": {
         "**/*.html": "html",
         "**/templates/**/*.html": "django-html",
@@ -15,5 +19,4 @@
     "emmet.includeLanguages": {
         "django-html": "html"
     },
-    "python.linting.flake8Enabled": true
 }

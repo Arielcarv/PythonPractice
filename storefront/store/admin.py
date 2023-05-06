@@ -1,6 +1,6 @@
 from typing import List, Tuple, Any
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db.models import QuerySet, Count
 from django.http import HttpRequest
 from django.urls import reverse
@@ -72,6 +72,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    actions = ["clear_inventory"]
     list_display = ["title", "unit_price", "inventory_status", "inventory", "collection_title"]
     list_editable = ["unit_price"]
     list_filter = ["collection", "last_update", InventoryFilter]
@@ -89,6 +90,15 @@ class ProductAdmin(admin.ModelAdmin):
         if 0 > product.inventory <= 10:
             return "Low"
         return "Out"
+
+    @admin.action(description="Clear inventory")
+    def clear_inventory(self, request: HttpRequest, queryset: QuerySet):
+        updated_count = queryset.update(inventory=0)
+        self.message_user(
+            request,
+            f"{updated_count} products inventory were cleared successfully!",
+            messages.ERROR,
+        )
 
 
 @admin.register(Order)
