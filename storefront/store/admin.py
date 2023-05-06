@@ -71,12 +71,30 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_editable = ["quantity", "unit_price"]
 
 
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ["product"]
+    extra = 1
+    min_num = 1
+    model = OrderItem
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["customer"]
+    inlines = [OrderItemInline]
+    list_display = ["id", "placed_at", "payment_status", "customer"]
+    list_editable = ["payment_status"]
+    list_per_page = 100
+    list_select_related = ["customer"]
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     autocomplete_fields = ["collection"]
     prepopulated_fields = {
         "slug": ["title"]
     }
+    search_fields = ["title"]
     actions = ["clear_inventory"]
     list_display = ["title", "unit_price", "inventory_status", "inventory", "collection_title"]
     list_editable = ["unit_price"]
@@ -104,15 +122,6 @@ class ProductAdmin(admin.ModelAdmin):
             f"{updated_count} products inventory were cleared successfully!",
             messages.ERROR,
         )
-
-
-@admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    autocomplete_fields = ["customer"]
-    list_display = ["id", "placed_at", "payment_status", "customer"]
-    list_editable = ["payment_status"]
-    list_per_page = 100
-    list_select_related = ["customer"]
 
 
 admin.site.register(Address)
