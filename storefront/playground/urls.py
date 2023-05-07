@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from playground.views import home, say
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("hello/", views.say, name="hello"),
+    path("", home, name="home"),
+    path("hello/", say, name="hello"),
 ]
