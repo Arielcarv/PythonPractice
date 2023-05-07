@@ -30,20 +30,26 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DEFAULT_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "playground.apps.PlaygroundConfig",
     "debug_toolbar",
+]
+
+APPLICATIONS = [
+    "rest_framework",
+    "playground.apps.PlaygroundConfig",
     "store.apps.StoreConfig",
     "store_custom.apps.StoreCustomConfig",
     "tags.apps.TagsConfig",
     "likes.apps.LikesConfig",
 ]
+
+INSTALLED_APPS = DEFAULT_APPS + APPLICATIONS
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
