@@ -7,8 +7,8 @@ from store.serializers import ProductSerializer
 
 @api_view()
 def product_list(request):
-    all_products = Product.objects.all()
-    serializer = ProductSerializer(all_products, many=True)
+    all_products = Product.objects.select_related("collection").all()
+    serializer = ProductSerializer(all_products, many=True, context={"request": request})
     return Response(serializer.data)
 
 
@@ -17,3 +17,8 @@ def product_detail(request, id):
     product = get_object_or_404(Product, pk=id)
     serializer = ProductSerializer(product)
     return Response(serializer.data)
+
+
+@api_view()
+def collection_detail(request, pk):
+    return Response("OK")
