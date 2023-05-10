@@ -5,11 +5,14 @@ from store.models import Product
 from store.serializers import ProductSerializer
 
 
-@api_view()
+@api_view(["GET", "POST"])
 def product_list(request):
-    all_products = Product.objects.select_related("collection").all()
-    serializer = ProductSerializer(all_products, many=True, context={"request": request})
-    return Response(serializer.data)
+    if request.method == "GET":
+        all_products = Product.objects.select_related("collection").all()
+        serializer = ProductSerializer(all_products, many=True, context={"request": request})
+        return Response(serializer.data)
+    serializer = ProductSerializer(data=request.data)
+    return Response("OK")
 
 
 @api_view()
