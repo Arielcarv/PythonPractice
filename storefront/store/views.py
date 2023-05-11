@@ -12,6 +12,7 @@ def product_list(request):
         serializer = ProductSerializer(all_products, many=True, context={"request": request})
         return Response(serializer.data)
     serializer = ProductSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
     return Response("OK")
 
 
