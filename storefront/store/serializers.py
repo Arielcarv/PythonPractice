@@ -6,13 +6,24 @@ from store.models import Product, Collection
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
-        fields = ["id", "title"]
+        fields = ["id", "title", "products_count"]
+
+    products_count = serializers.IntegerField(required=False)
 
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ["id", "title", "description", "slug", "inventory", "unit_price", "price_with_taxes", "collection"]
+        fields = [
+            "id",
+            "title",
+            "description",
+            "slug",
+            "inventory",
+            "unit_price",
+            "price_with_taxes",
+            "collection",
+        ]
 
     price_with_taxes = serializers.SerializerMethodField(method_name="calculate_tax")
 
