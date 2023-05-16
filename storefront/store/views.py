@@ -2,8 +2,8 @@ from django.db.models import Count
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from store.models import Collection, Product, OrderItem
-from store.serializers import CollectionSerializer, ProductSerializer
+from store.models import Collection, OrderItem, Product, Review
+from store.serializers import CollectionSerializer, ProductSerializer, ReviewSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -39,3 +39,8 @@ class CollectionViewSet(ModelViewSet):
                 status=status.HTTP_405_METHOD_NOT_ALLOWED,
             )
         return super().destroy(request, *args, **kwargs)
+
+
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
