@@ -1,13 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from store.models import Collection, Product
 from store.serializers import CollectionSerializer, ProductSerializer
 
 
-class ProductList(ListCreateAPIView):
+class ProductViewSet(ModelViewSet):
     def get_queryset(self):
         return Product.objects.select_related("collection").all()
 
@@ -16,11 +16,6 @@ class ProductList(ListCreateAPIView):
 
     def get_serializer_context(self):
         return {"request": self.request}
-
-
-class ProductDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
 
     def delete(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -34,15 +29,7 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CollectionList(ListCreateAPIView):
-    def get_queryset(self):
-        return Collection.objects.annotate(products_count=Count("products"))
-
-    def get_serializer_class(self):
-        return CollectionSerializer
-
-
-class CollectionDetail(RetrieveUpdateDestroyAPIView):
+class CollectionViewSet(ModelViewSet):
     def get_queryset(self):
         return Collection.objects.annotate(products_count=Count("products"))
 
