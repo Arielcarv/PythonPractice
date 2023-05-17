@@ -8,7 +8,11 @@ from store.serializers import CollectionSerializer, ProductSerializer, ReviewSer
 
 class ProductViewSet(ModelViewSet):
     def get_queryset(self):
-        return Product.objects.select_related("collection").all()
+        products = Product.objects.select_related("collection").all()
+        collection_id = self.request.query_params.get("collection_id")
+        if collection_id:
+            products = products.filter(collection_id=collection_id)
+        return products
 
     def get_serializer_class(self):
         return ProductSerializer
