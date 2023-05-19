@@ -57,3 +57,11 @@ class ReviewViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {"product_id": self.kwargs.get("product_pk")}
+
+
+class CartViewSet:
+    pass
+
+
+class CartItemViewSet:
+    pass
