@@ -26,6 +26,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGIN = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.preview.app.github.dev",
+    "http://*.127.0.0.1",
+]
 
 # Application definition
 
@@ -54,6 +58,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "StudyBud.urls"
+AUTH_USER_MODEL = "general.User"
 
 TEMPLATES = [
     {
@@ -115,10 +120,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static")
-# ]
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+MEDIA_URL = "/images/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "images")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

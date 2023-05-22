@@ -30,18 +30,30 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DEFAULT_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "playground",
+    "django_filters",
     "debug_toolbar",
 ]
 
+APPLICATIONS = [
+    "rest_framework",
+    "playground.apps.PlaygroundConfig",
+    "store.apps.StoreConfig",
+    "store_custom.apps.StoreCustomConfig",
+    "tags.apps.TagsConfig",
+    "likes.apps.LikesConfig",
+]
+
+INSTALLED_APPS = DEFAULT_APPS + APPLICATIONS
+
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -49,7 +61,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "storefront.urls"
@@ -81,8 +92,13 @@ INTERNAL_IPS = [
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "storefront",
+        "USER": "ariel",
+        "PASSWORD": "123456",
+        "HOST": "127.0.0.1",
+        # "HOST": "172.17.0.1",
+        "PORT": "3306",
     }
 }
 
@@ -129,3 +145,9 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "COERCE_DECIMAL_TO_STRING": False,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 5,
+}

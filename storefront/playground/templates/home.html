@@ -2,14 +2,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'home.css' %}">
-    <title>Home</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'home.css' %}">
+  <title>Home</title>
 </head>
 <body>
+  <section class="links">  
     <a href="{% url 'hello' %}">Hello</a>
     <a href="{% url 'admin:index' %}">Admin</a>
+  </section>
+  <section class="products">
+    <div class="left-products">
+      <p>Aggregation Results: {{ aggregation_result }}</p>
+      <h3>Left Products List:</h3>
+      <ul>
+        {% for product in products %}
+          <li>{{ product }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="right-products">
+      <h3>Right Products List:</h3>
+      <ul>
+        {% for order in last_5_orders %}
+          <li>{{ order }} - {{order.customer}} : {{ order.placed_at }}</li>
+          <li>{{ order.orderitem_set__product }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
 </body>
 </html>

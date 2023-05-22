@@ -17,7 +17,7 @@
         <div class="profile">
           <div class="profile__avatar">
             <div class="avatar avatar--large active">
-              <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="User Profile Picture"/>
+              <img src="{{ request.user.avatar.url }}" alt="User Profile Picture"/>
             </div>
           </div>
           <div class="profile__info">
@@ -30,7 +30,7 @@
           <div class="profile__about">
             <h3>About</h3>
             <p>
-              {{ user.get_full_name }}
+              {{ user.bio|default:"No bio yet" }}
             </p>
           </div>
         </div>
