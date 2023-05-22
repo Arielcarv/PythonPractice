@@ -14,6 +14,7 @@ from store.serializers import (
     CollectionSerializer,
     ProductSerializer,
     ReviewSerializer,
+    UpdateCartItemSerializer,
 )
 from store.filters import ProductFilter
 
@@ -73,9 +74,13 @@ class CartViewSet(CreateModelMixin, DestroyModelMixin, RetrieveModelMixin, Gener
 
 
 class CartItemViewSet(ModelViewSet):
+    http_method_names = ["delete", "get", "patch", "post"]
+
     def get_serializer_class(self):
         if self.request.method == "POST":
             return AddCartItemSerializer
+        if self.request.method == "PATCH":
+            return UpdateCartItemSerializer
         return CartItemSerializer
 
     def get_serializer_context(self):
