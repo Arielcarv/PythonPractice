@@ -30,8 +30,10 @@ def home(request):
 
     """Database Functions"""
     database_function_queryset = Customer.objects.annotate(
-        full_name_1=Func(F("first_name"), Value(" "), F("last_name"), function="CONCAT"),
-        full_name_2=Concat("first_name", Value(" "), "last_name"),
+        full_name_1=Func(
+            F("user__first_name"), Value(" "), F("user__last_name"), function="CONCAT"
+        ),
+        full_name_2=Concat("user__first_name", Value(" "), "user__last_name"),
     )
 
     """Orders by Customer"""
