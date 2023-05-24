@@ -43,11 +43,11 @@ DEFAULT_APPS = [
 
 APPLICATIONS = [
     "rest_framework",
-    "playground.apps.PlaygroundConfig",
-    "store.apps.StoreConfig",
-    "store_custom.apps.StoreCustomConfig",
-    "tags.apps.TagsConfig",
-    "likes.apps.LikesConfig",
+    "playground",
+    "store",
+    "tags",
+    "likes",
+    "core",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + APPLICATIONS
@@ -143,6 +143,8 @@ STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+AUTH_USER_MODEL = "core.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
