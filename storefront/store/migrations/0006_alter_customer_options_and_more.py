@@ -16,10 +16,6 @@ class Migration(migrations.Migration):
             name="customer",
             options={"ordering": ["user__first_name", "user__last_name"]},
         ),
-        migrations.RemoveIndex(
-            model_name="customer",
-            name="store_custo_first_n_8f83e0_idx",
-        ),
         migrations.RemoveField(
             model_name="customer",
             name="email",

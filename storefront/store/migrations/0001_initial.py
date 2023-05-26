@@ -204,12 +204,6 @@ class Migration(migrations.Migration):
                 "ordering": ["id"],
             },
         ),
-        migrations.AddIndex(
-            model_name="customer",
-            index=models.Index(
-                fields=["first_name", "last_name"], name="store_custo_first_n_8f83e0_idx"
-            ),
-        ),
         migrations.AddField(
             model_name="collection",
             name="featured_product",

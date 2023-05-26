@@ -62,7 +62,7 @@ class Customer(models.Model):
         (MEMBERSHIP_SILVER, "Silver"),
         (MEMBERSHIP_BRONZE, "Bronze"),
     ]
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="+")
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     phone = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
     membership = models.CharField(
@@ -105,6 +105,7 @@ class Order(models.Model):
 
     class Meta:
         ordering = ["-placed_at"]
+        permissions = [("cancel_order", "Can cancel order")]
 
 
 class OrderItem(models.Model):
