@@ -43,6 +43,7 @@ DEFAULT_APPS = [
 
 APPLICATIONS = [
     "rest_framework",
+    "djoser",
     "playground",
     "store",
     "tags",
@@ -143,13 +144,17 @@ STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
-AUTH_USER_MODEL = "core.User"
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": False,
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 5,
+    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework.authentication.TokenAuthentication",),
 }
+
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": ("JWT",),
+}
+
+AUTH_USER_MODEL = "core.User"
