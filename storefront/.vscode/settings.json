@@ -10,6 +10,9 @@
     "python.linting.pylintEnabled": false,
     "python.languageServer": "Pylance",
     "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.autoImportUserSymbols": true,
+    "python.analysis.indexing": true,
     "files.associations": {
         "**/*.html": "html",
         "**/templates/**/*.html": "django-html",
@@ -18,5 +21,5 @@
     },
     "emmet.includeLanguages": {
         "django-html": "html"
-    },
+    }
 }

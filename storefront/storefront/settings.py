@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -98,7 +99,6 @@ DATABASES = {
         "USER": "ariel",
         "PASSWORD": "123456",
         "HOST": "127.0.0.1",
-        # "HOST": "172.17.0.1",
         "PORT": "3306",
     }
 }
@@ -157,6 +157,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "AUTH_HEADER_TYPES": ("JWT",),
 }
 
