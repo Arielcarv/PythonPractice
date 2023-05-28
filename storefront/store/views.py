@@ -2,16 +2,22 @@ from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin,
+    DestroyModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from store.models import Cart, CartItem, Collection, OrderItem, Product, Review
+from store.models import Cart, CartItem, Customer, Collection, OrderItem, Product, Review
 from store.pagination import DefaultPagination
 from store.serializers import (
     AddCartItemSerializer,
     CartSerializer,
     CartItemSerializer,
     CollectionSerializer,
+    CustomerSerializer,
     ProductSerializer,
     ReviewSerializer,
     UpdateCartItemSerializer,
@@ -90,3 +96,8 @@ class CartItemViewSet(ModelViewSet):
         return CartItem.objects.filter(cart_id=self.kwargs.get("carts_pk")).select_related(
             "product"
         )
+
+
+class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+    query_set = Customer.objects.all()
+    serializer_class = CustomerSerializer
