@@ -9,6 +9,7 @@ from rest_framework.mixins import (
     RetrieveModelMixin,
     UpdateModelMixin,
 )
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from store.models import Cart, CartItem, Customer, Collection, OrderItem, Product, Review
@@ -100,8 +101,14 @@ class CartItemViewSet(ModelViewSet):
 
 
 class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-    query_set = Customer.objects.all()
+    queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     @action(detail=False, methods=["GET", "PUT"])
     def me(self, request):
