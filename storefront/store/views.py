@@ -7,13 +7,13 @@ from rest_framework.mixins import (
     CreateModelMixin,
     DestroyModelMixin,
     RetrieveModelMixin,
-    UpdateModelMixin,
 )
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from store.models import Cart, CartItem, Customer, Collection, OrderItem, Product, Review
 from store.pagination import DefaultPagination
+from store.permissions import IsAdminOrReadOnly
 from store.serializers import (
     AddCartItemSerializer,
     CartSerializer,
@@ -32,6 +32,7 @@ class ProductViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
     pagination_class = DefaultPagination
+    permission_classes = [IsAdminOrReadOnly]
     search_fields = ["title", "description"]
     ordering_fields = ["unit_price", "last_update"]
 
@@ -51,6 +52,9 @@ class ProductViewSet(ModelViewSet):
 
 
 class CollectionViewSet(ModelViewSet):
+    def get_permissions(self):
+        return [IsAdminOrReadOnly()]
+
     def get_queryset(self):
         return Collection.objects.annotate(products_count=Count("products"))
 
@@ -100,19 +104,14 @@ class CartItemViewSet(ModelViewSet):
         )
 
 
-class CustomerViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
+class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
-    def get_permissions(self):
-        if self.request.method == "GET":
-            return [AllowAny()]
-        return [IsAuthenticated()]
-
-    @action(detail=False, methods=["GET", "PUT"])
+    @action(detail=False, methods=["GET", "PUT"], permission_classes=[IsAuthenticated])
     def me(self, request):
-        (customer, created) = Customer.objects.get_or_create(user_id=request.user.id)
+        (customer, _) = Customer.objects.get_or_create(user_id=request.user.id)
         if request.method == "GET":
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
