@@ -11,7 +11,7 @@ from rest_framework.mixins import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from store.models import Cart, CartItem, Customer, Collection, OrderItem, Product, Review
+from store.models import Cart, CartItem, Customer, Collection, Order, OrderItem, Product, Review
 from store.pagination import DefaultPagination
 from store.permissions import (
     FullDjangoModelPermissions,
@@ -24,6 +24,7 @@ from store.serializers import (
     CartItemSerializer,
     CollectionSerializer,
     CustomerSerializer,
+    OrderSerializer,
     ProductSerializer,
     ReviewSerializer,
     UpdateCartItemSerializer,
@@ -128,3 +129,8 @@ class CustomerViewSet(ModelViewSet):
     @action(detail=True, permission_classes=[ViewCustomerHistoryPermission])
     def history(self, request, pk):
         return Response("OK")
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer

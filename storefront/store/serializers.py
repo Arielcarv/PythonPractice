@@ -1,6 +1,6 @@
 from decimal import Decimal
 from rest_framework import serializers
-from store.models import Product, Cart, CartItem, Customer, Collection, Review
+from store.models import Order, OrderItem, Product, Cart, CartItem, Customer, Collection, Review
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -51,7 +51,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "date", "description"]
 
 
-class CartItemProductSerializer(serializers.ModelSerializer):
+class SimpleProductSerializer(serializers.ModelSerializer):
     price_with_taxes = serializers.SerializerMethodField(method_name="calculate_tax")
 
     def calculate_tax(self, product: Product):
@@ -63,7 +63,7 @@ class CartItemProductSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product = CartItemProductSerializer()
+    product = SimpleProductSerializer()
     total_price = serializers.SerializerMethodField()
 
     def get_total_price(self, cart_item: CartItem):
@@ -126,3 +126,19 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ["id", "user_id", "phone", "birth_date", "membership"]
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+
+    class Meta:
+        model = OrderItem
+        fields = ["id", "product", "quantity", "unit_price"]
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ["id", "customer", "items", "placed_at", "payment_status"]
