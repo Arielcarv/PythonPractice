@@ -8,7 +8,7 @@ from rest_framework.mixins import (
     DestroyModelMixin,
     RetrieveModelMixin,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from store.models import Cart, CartItem, Customer, Collection, Order, OrderItem, Product, Review
@@ -133,8 +133,12 @@ class CustomerViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
-    serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
+    http_method_names = ["get", "patch", "delete", "head", "options"]
+
+    def get_permissions(self):
+        if self.request.method in ["POST", "PATCH", "DELETE"]:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         user = self.request.user
