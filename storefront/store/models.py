@@ -46,7 +46,7 @@ class Product(models.Model):
         return self.title
 
     @property
-    def price_display(self):
+    def price_display(self) -> str:
         return f"${self.unit_price:.2f}"
 
     class Meta:
@@ -73,11 +73,11 @@ class Customer(models.Model):
         return f"{self.user.first_name} {self.user.last_name}"
 
     @admin.display(ordering="user__first_name")
-    def first_name(self):
+    def first_name(self) -> str:
         return self.user.first_name
 
     @admin.display(ordering="user__last_name")
-    def last_name(self):
+    def last_name(self) -> str:
         return self.user.last_name
 
     class Meta:

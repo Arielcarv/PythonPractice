@@ -16,7 +16,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     price_with_taxes = serializers.SerializerMethodField(method_name="calculate_tax")
 
-    def calculate_tax(self, product: Product):
+    def calculate_tax(self, product: Product) -> Decimal:
         return product.unit_price * Decimal(1.1)
 
     """ def create(self, validated_data):
@@ -44,7 +44,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
+    def create(self, validated_data) -> Review:
         product_id = self.context.get("product_id")
         return Review.objects.create(product_id=product_id, **validated_data)
 
@@ -56,7 +56,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class SimpleProductSerializer(serializers.ModelSerializer):
     price_with_taxes = serializers.SerializerMethodField(method_name="calculate_tax")
 
-    def calculate_tax(self, product: Product):
+    def calculate_tax(self, product: Product) -> Decimal:
         return product.unit_price * Decimal(1.1)
 
     class Meta:
@@ -68,7 +68,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
     total_price = serializers.SerializerMethodField()
 
-    def get_total_price(self, cart_item: CartItem):
+    def get_total_price(self, cart_item: CartItem) -> Decimal:
         return cart_item.quantity * cart_item.product.unit_price
 
     class Meta:
@@ -81,7 +81,7 @@ class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(read_only=True, many=True)
     total_price = serializers.SerializerMethodField()
 
-    def get_total_price(self, cart: CartItem):
+    def get_total_price(self, cart: CartItem) -> Decimal:
         return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
 
     class Meta:
@@ -92,7 +92,7 @@ class CartSerializer(serializers.ModelSerializer):
 class AddCartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField()
 
-    def validate_product_id(self, pk):
+    def validate_product_id(self, pk: int) -> int:
         if not Product.objects.filter(pk=pk).exists():
             raise serializers.ValidationError("There is no product with the specified ID.")
         return pk
@@ -156,8 +156,7 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
 class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField()
 
-    def validate_cart_id(self, cart_id):
-        print(cart_id)
+    def validate_cart_id(self, cart_id: int) -> int:
         if not Cart.objects.filter(pk=cart_id).exists():
             raise serializers.ValidationError("No cart with the given ID was found.")
         if CartItem.objects.fildeer(cart_id=cart_id).count() == 0:

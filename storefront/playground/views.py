@@ -1,12 +1,12 @@
 from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-
 from store.models import Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     """Select products that have been ordered and sort those products by title"""
     distinct_order_items = OrderItem.objects.values("product_id").distinct()
     products = Product.objects.filter(id__in=distinct_order_items).order_by("title")
@@ -60,5 +60,5 @@ def home(request):
     return render(request, "home.html", context)
 
 
-def say(request):
+def say(request: HttpRequest) -> HttpResponse:
     return render(request, "hello.html")
