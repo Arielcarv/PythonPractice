@@ -11,7 +11,17 @@ from rest_framework.mixins import (
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from store.models import Cart, CartItem, Customer, Collection, Order, OrderItem, Product, Review
+from store.models import (
+    Cart,
+    CartItem,
+    Customer,
+    Collection,
+    Order,
+    OrderItem,
+    Product,
+    ProductImage,
+    Review,
+)
 from store.pagination import DefaultPagination
 from store.permissions import (
     FullDjangoModelPermissions,
@@ -26,6 +36,7 @@ from store.serializers import (
     CreateOrderSerializer,
     CustomerSerializer,
     OrderSerializer,
+    ProductImageSerializer,
     ProductSerializer,
     ReviewSerializer,
     UpdateCartItemSerializer,
@@ -164,3 +175,13 @@ class OrderViewSet(ModelViewSet):
         order = serializer.save()
         serializer = OrderSerializer(order)
         return Response(serializer.data)
+
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs["product_pk"])
+
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs["product_pk"]}
