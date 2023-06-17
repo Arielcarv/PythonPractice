@@ -23,8 +23,19 @@ class CollectionSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "products_count"]
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ["id", "image"]
+
+    def create(self, validated_data):
+        product_id = self.context["product_id"]
+        return ProductImage.objects.create(product_id=product_id, **validated_data)
+
+
 class ProductSerializer(serializers.ModelSerializer):
     price_with_taxes = serializers.SerializerMethodField(method_name="calculate_tax")
+    images = ProductImageSerializer(many=True, read_only=True)
 
     def calculate_tax(self, product: Product) -> Decimal:
         return product.unit_price * Decimal(1.1)
@@ -46,6 +57,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "slug",
+            "images",
             "inventory",
             "unit_price",
             "price_with_taxes",
@@ -194,13 +206,3 @@ class CreateOrderSerializer(serializers.Serializer):
         order_created.send_robust(sender=self.__class__, order=order)
 
         return order
-
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ["id", "image"]
-
-    def create(self, validated_data):
-        product_id = self.context["product_id"]
-        return ProductImage.objects.create(product_id=product_id, **validated_data)
