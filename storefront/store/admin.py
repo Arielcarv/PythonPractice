@@ -6,7 +6,17 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
 
-from store.models import Product, Customer, Promotion, Order, Address, Collection, OrderItem, Cart
+from store.models import (
+    Product,
+    Customer,
+    ProductImage,
+    Promotion,
+    Order,
+    Address,
+    Collection,
+    OrderItem,
+    Cart,
+)
 
 admin.AdminSite.site_header = "Storefront Admin"
 admin.AdminSite.site_title = "Storefront Admin Portal"
@@ -89,10 +99,21 @@ class OrderAdmin(admin.ModelAdmin):
     list_select_related = ["customer"]
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    readonly_fields = ["thumbnail"]
+
+    def thumbnail(self, instance):
+        if instance.image.name != "":
+            return format_html(f'<img src="{instance.image.url}" class="thumbnail"/>')
+        return ""
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = ["clear_inventory"]
     autocomplete_fields = ["collection"]
+    inlines = [ProductImageInline]
     prepopulated_fields = {"slug": ["title"]}
     search_fields = ["title"]
     list_display = ["title", "unit_price", "inventory_status", "inventory", "collection_title"]
@@ -121,6 +142,9 @@ class ProductAdmin(admin.ModelAdmin):
             f"{updated_count} products inventory were cleared successfully!",
             messages.ERROR,
         )
+
+    class Media:
+        css = {"all": ["store/styles.css"]}
 
 
 admin.site.register(Address)
