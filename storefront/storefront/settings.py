@@ -182,3 +182,12 @@ DJOSER = {
         "current_user": "core.serializers.UserSerializer",
     }
 }
+
+# EMAIL BACKEND
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "127.0.0.1"
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = 2525
+DEFAULT_FROM_EMAIL = "from@ariel.com"
