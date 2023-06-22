@@ -1,4 +1,4 @@
-from django.core.mail import mail_admins, BadHeaderError
+from django.core.mail import BadHeaderError, EmailMessage
 from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
 from django.http import HttpRequest, HttpResponse
@@ -64,7 +64,10 @@ def home(request: HttpRequest) -> HttpResponse:
 def say(request: HttpRequest) -> HttpResponse:
     try:
         # send_mail("subject", "message", "info@ariel.com", ["bob@ariel.com"])
-        mail_admins("subject", "message", html_message="message")
+        # mail_admins("subject", "message", html_message="message")
+        message = EmailMessage("subject", "message", "info@ariel.com", ["bob@ariel.com"])
+        message.attach_file("playground/static/images/one-piece-jolly-roger.png")
+        message.send()
     except BadHeaderError:
         pass
     return render(request, "hello.html")
