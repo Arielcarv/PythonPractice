@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from store.models import Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
+from templated_mail.mail import BaseEmailMessage
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -68,6 +69,18 @@ def say(request: HttpRequest) -> HttpResponse:
         message = EmailMessage("subject", "message", "info@ariel.com", ["bob@ariel.com"])
         message.attach_file("playground/static/images/one-piece-jolly-roger.png")
         message.send()
+    except BadHeaderError:
+        pass
+    return render(request, "hello.html")
+
+
+def email_sender(request: HttpRequest) -> HttpResponse:
+    try:
+        message = BaseEmailMessage(
+            template_name="emails/hello.html",
+            context={"name": "Ariel"},
+        )
+        message.send(["bob@ariel.com"])
     except BadHeaderError:
         pass
     return render(request, "hello.html")
