@@ -2,7 +2,7 @@
 
 Link for the [Official Django tutorial](https://docs.djangoproject.com/en/3.2/intro/tutorial01/)
 
-### Commands:
+## Commands:
 - Install `pip install pipenv`. And create a virtual environment.
 
 ```bash
@@ -25,7 +25,7 @@ python manage.py migrate
 ```bash
 python manage.py startapp <NameOfTheApp>
 ```
-### Shell commands to query database:
+## Shell commands to query database:
 - On this example we are going to access the Question and Choice Object from database. First you need to access project shell.
 ```bash
 python manage.py shell
@@ -40,3 +40,9 @@ python manage.py shell
 ```
 
 
+## Docker images
+```bash
+docker run --rm -it -p 3000:80 -p 2525:25 rnwood/smtp4dev
+
+docker run -d -p 6379:6379 redis
+```
