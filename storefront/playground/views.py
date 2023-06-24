@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from store.models import Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
+from playground.tasks import notify_customers
 from templated_mail.mail import BaseEmailMessage
 
 
@@ -83,4 +84,9 @@ def email_sender(request: HttpRequest) -> HttpResponse:
         message.send(["bob@ariel.com"])
     except BadHeaderError:
         pass
+    return render(request, "hello.html")
+
+
+def celery_email_sender(request: HttpRequest) -> HttpResponse:
+    notify_customers.delay("Hello")
     return render(request, "hello.html")
