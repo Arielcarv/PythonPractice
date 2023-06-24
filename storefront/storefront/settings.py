@@ -193,3 +193,8 @@ EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = "from@ariel.com"
 
 ADMINS = [("Ariel", "admin@ariel.com")]
+
+
+# CELERY CONFIG
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"
