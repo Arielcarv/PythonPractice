@@ -46,3 +46,12 @@ docker run --rm -it -p 3000:80 -p 2525:25 rnwood/smtp4dev
 
 docker run -d -p 6379:6379 redis
 ```
+
+## Celery setup
+```bash
+celery -A storefront worker --loglevel=info
+
+celery -A storefront beat
+
+celery -A storefront flower
+```
