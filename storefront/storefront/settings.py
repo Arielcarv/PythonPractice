@@ -53,6 +53,7 @@ APPLICATIONS = [
     "corsheaders",
     "rest_framework",
     "djoser",
+    "silk",
     "playground",
     "store",
     "tags",
@@ -64,7 +65,7 @@ INSTALLED_APPS = DEFAULT_APPS + APPLICATIONS
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -73,6 +74,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE += ["silk.middleware.SilkyMiddleware"]
 
 ROOT_URLCONF = "storefront.urls"
 
