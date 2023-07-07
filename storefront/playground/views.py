@@ -3,6 +3,7 @@ from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, Deci
 from django.db.models.functions import Concat
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+import requests
 from store.models import Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
 from playground.tasks import notify_customers
@@ -90,3 +91,8 @@ def email_sender(request: HttpRequest) -> HttpResponse:
 def celery_email_sender(request: HttpRequest) -> HttpResponse:
     notify_customers.delay("Hello")
     return render(request, "hello.html")
+
+
+def simulate_delay(request: HttpRequest) -> HttpResponse:
+    requests.get("https://httpbin.org/delay/2")
+    return render(request, "hello.html", {"name": "Ariel"})
