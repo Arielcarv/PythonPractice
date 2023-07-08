@@ -16,4 +16,3 @@ pytest~=7.4.0
 pytest-django~=4.5.2
 pytest-watch~=4.2.0
 redis~=4.5.5
-requests~=2.31.0
