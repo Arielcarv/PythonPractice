@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.mail import BadHeaderError, EmailMessage
 from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, DecimalField
 from django.db.models.functions import Concat
@@ -96,3 +97,12 @@ def celery_email_sender(request: HttpRequest) -> HttpResponse:
 def simulate_delay(request: HttpRequest) -> HttpResponse:
     requests.get("https://httpbin.org/delay/2")
     return render(request, "hello.html", {"name": "Ariel"})
+
+
+def simulate_delay_caching(request: HttpRequest) -> HttpResponse:
+    cache_key = "httpbin_result"
+    if cache.get(cache_key) is None:
+        response = requests.get("https://httpbin.org/delay/2")
+        data = response.json()
+        cache.set(cache_key, data)
+    return render(request, "hello.html", {"name": cache.get(cache_key)})
