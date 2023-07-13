@@ -3,12 +3,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic.base import RedirectView
 
 
 urlpatterns = [
+    path("", include("core.urls")),
     path("admin/", admin.site.urls),
-    path("", RedirectView.as_view(url="store", permanent=False)),
     path("playground/", include("playground.urls")),
     path("store/", include("store.urls")),
     path("auth/", include("djoser.urls")),
