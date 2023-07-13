@@ -4,11 +4,14 @@ from django.db.models import Value, F, Func, Min, Count, ExpressionWrapper, Deci
 from django.db.models.functions import Concat
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
-import requests
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from playground.tasks import notify_customers
+from rest_framework.views import APIView
 from store.models import Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
-from playground.tasks import notify_customers
 from templated_mail.mail import BaseEmailMessage
+import requests
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -106,3 +109,18 @@ def simulate_delay_caching(request: HttpRequest) -> HttpResponse:
         data = response.json()
         cache.set(cache_key, data)
     return render(request, "hello.html", {"name": cache.get(cache_key)})
+
+
+@cache_page(5 * 60)
+def simulate_delay_caching_with_decorator(request: HttpRequest) -> HttpResponse:
+    response = requests.get("https://httpbin.org/delay/2")
+    data = response.json()
+    return render(request, "hello.html", {"name": data})
+
+
+class CachingView(APIView):
+    @method_decorator(cache_page(5 * 60))
+    def get(self, request):
+        response = requests.get("https://httpbin.org/delay/2")
+        data = response.json()
+        return render(request, "hello.html", {"name": data})
