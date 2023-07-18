@@ -12,6 +12,9 @@ from store.models import Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
 from templated_mail.mail import BaseEmailMessage
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def home(request: HttpRequest) -> HttpResponse:
