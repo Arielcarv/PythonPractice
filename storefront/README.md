@@ -55,3 +55,7 @@ celery -A storefront beat
 
 celery -A storefront flower
 ```
+## Running with gunicorn
+```
+gunicorn storefront.wsgi
+```
