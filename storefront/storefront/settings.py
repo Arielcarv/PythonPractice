@@ -185,7 +185,7 @@ DJOSER = {
 # EMAIL BACKEND
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "127.0.0.1"
+EMAIL_HOST = "smtp4dev"
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 2525
@@ -196,7 +196,7 @@ ADMINS = [("Ariel", "admin@ariel.com")]
 
 # CELERY CONFIG
 
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"
+CELERY_BROKER_URL = "redis://redis:6379/1"
 CELERY_BEAT_SCHEDULE = {
     "notify_customers": {
         "task": "playground.tasks.notify_customers",
@@ -210,7 +210,7 @@ CELERY_BEAT_SCHEDULE = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
+        "LOCATION": "redis://redis:6379/2",
         "TIMEOUT": 10 * 60,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
@@ -233,3 +233,6 @@ LOGGING = {
         "verbose": {"format": "{asctime} ({levelname}) - {name} - {message}", "style": "{"}
     },
 }
+
+
+DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: True}
