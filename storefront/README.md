@@ -1,6 +1,5 @@
-# Django tutorial for begginers [Programming with Mosh](https://youtu.be/rHux0gMZ3Eg)
+# Django tutorial for beginers [Programming with Mosh](https://youtu.be/rHux0gMZ3Eg)
 
-Link for the [Official Django tutorial](https://docs.djangoproject.com/en/3.2/intro/tutorial01/)
 
 ## Commands:
 - Install `pip install pipenv`. And create a virtual environment.
@@ -8,7 +7,7 @@ Link for the [Official Django tutorial](https://docs.djangoproject.com/en/3.2/in
 ```bash
 pipenv install django   # Inside the virtual environment.
 pipenv shell            # To activate the environment.
-django-admin startproject front
+django-admin startproject storefront
 ```
 
 - Run server:
@@ -25,20 +24,6 @@ python manage.py migrate
 ```bash
 python manage.py startapp <NameOfTheApp>
 ```
-## Shell commands to query database:
-- On this example we are going to access the Question and Choice Object from database. First you need to access project shell.
-```bash
-python manage.py shell
-```
-- Then interact with objects through ORM (Object Relational Mapper)
-```python
->> from polls.models import Choice, Question
->> Question.Objects.all() # Show all Questions objects.
->> Question.Objects.get(pk=<number>) # pk=Primary key.
->> Question._meta.get_fields() # Show all Question fields with details.
->> Choice.Objects.all() # Show all Choice objects.
-```
-
 
 ## Docker images
 ```bash
