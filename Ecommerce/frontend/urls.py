@@ -1,6 +1,5 @@
-from django.contrib import admin
-from django.urls import path, include
-from django.http import HttpResponse
+from django.urls import path
+from . import views
 
 
-urlpatterns = [path("", HttpResponse("Hello"))]
+urlpatterns = [path("", views.home, name="home")]
