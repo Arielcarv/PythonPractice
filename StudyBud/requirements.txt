@@ -1,7 +1,7 @@
 black==23.3.0
-django==4.2
-django-cors-headers==3.14.0
+django==4.2.4
+django-cors-headers==4.2.0
 djangorestframework==3.14.0
-flake8==6.0.0
-pillow==9.5.0
-pre-commit==3.2.2
+flake8==6.1.0
+pillow==10.0.0
+pre-commit==3.3.3
